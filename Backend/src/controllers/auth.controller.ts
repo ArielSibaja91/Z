@@ -100,7 +100,7 @@ export const authCheck = async (req: any, res: Response) => {
         // Manual type validation
         if (!req.user || !req.user._id) {
             return res.status(400).json({ error: "Invalid request: Missing user information" });
-        }
+        };
         // Awaits the protectRoute middleware to find if the user is logged in
         const user = await User.findById(req.user._id).select("-password");
         if (!user) {
