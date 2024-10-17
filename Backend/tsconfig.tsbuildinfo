@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/controllers/auth.controller.ts","./src/database/mongoconection.ts","./src/routes/auth.routes.ts"],"version":"5.6.2"}
+{"root":["./src/index.ts","./src/controllers/auth.controller.ts","./src/database/mongoconection.ts","./src/lib/utils/generatetoken.ts","./src/middleware/protectroute.ts","./src/models/user.model.ts","./src/routes/auth.routes.ts","./src/types/express.d.ts"],"version":"5.6.2"}
