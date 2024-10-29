@@ -2,25 +2,39 @@ import { Link } from "react-router-dom";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { FormData } from "../../../types/formData";
 import { ZSVG } from "../../../components/svgs/ZSVG";
-import { MdOutlineMail } from "react-icons/md";
-import { MdPassword } from "react-icons/md";
+import { MdOutlineMail, MdPassword } from "react-icons/md";
+import { useAuth } from "../../../context/useAuth";
 
 export const LoginPage = () => {
   const [formData, setFormData] = useState<FormData>({
     username: "",
     password: "",
   });
+  const { login } = useAuth();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    console.log(formData);
+    setIsLoading(true);
+    setIsError(false);
+    try {
+      await login(formData);
+    } catch (error) {
+      setIsError(true);
+      console.log(error);
+      setTimeout(() => {
+        setIsError(false);
+      }, 4000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const isError: boolean = false;
   return (
     <div className="max-w-screen-xl mx-auto flex h-screen">
       <div className="flex-1 hidden lg:flex items-center  justify-center">
@@ -54,9 +68,9 @@ export const LoginPage = () => {
             />
           </label>
           <button className="rounded-full py-1.5 bg-primary text-white font-semibold w-full">
-            Login
+            {isLoading ? "Loading..." : "Log in"}
           </button>
-          {isError && <p className="text-red-500">Something went wrong</p>}
+          {isError && <p className="text-red-500">Something went wrong...</p>}
         </form>
         <div className="flex flex-col gap-2 mt-4">
           <p className="text-white text-lg">Don't have an account?</p>

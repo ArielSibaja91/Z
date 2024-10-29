@@ -26,7 +26,7 @@ export const ProfilePage = () => {
     fullName: "Ariel Sibaja",
     username: "arielsibaja91",
     profileImg: "/vite.svg",
-    coverImg: "/vite.svg",
+    coverImg: "/cover.png",
     bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     link: "https://youtube.com/",
     following: ["1", "2", "3"],
