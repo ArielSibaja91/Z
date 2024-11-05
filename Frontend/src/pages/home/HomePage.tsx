@@ -9,7 +9,7 @@ export const HomePage = () => {
       <header className="flex w-full border-b border-white/20">
         <button
           className={
-            "flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
+            "flex justify-center flex-1 p-3 hover:bg-zinc-900 transition duration-300 cursor-pointer relative"
           }
           onClick={() => setFeedType("forYou")}
         >
@@ -19,12 +19,12 @@ export const HomePage = () => {
           )}
         </button>
         <button
-          className="flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
+          className="flex justify-center flex-1 p-3 hover:bg-zinc-900 transition duration-300 cursor-pointer relative"
           onClick={() => setFeedType("following")}
         >
           Following
           {feedType === "following" && (
-            <div className="absolute bottom-0 w-10  h-1 rounded-full bg-primary"></div>
+            <div className="absolute bottom-0 w-10 h-1 rounded-full bg-primary"></div>
           )}
         </button>
       </header>
@@ -32,7 +32,7 @@ export const HomePage = () => {
       <CreatePost />
 
       {/* POSTS */}
-      <Posts />
+      <Posts feedType={feedType}/>
     </main>
   );
 };

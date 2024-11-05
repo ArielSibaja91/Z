@@ -33,14 +33,11 @@ export const Post: React.FC<PostProps> = ({ post }) => {
   return (
     <>
       <div className="flex gap-2 items-start p-4 border-b border-white/20">
-        <div className="avatar">
           <Link
             to={`/profile/${postOwner.username}`}
-            className="w-8 rounded-full overflow-hidden"
           >
-            <img src={postOwner.profileImg || "/avatar-placeholder.png"} />
+            <img className="w-8 rounded-full overflow-hidden" src={postOwner.profileImg || "/avatar-placeholder.png"} />
           </Link>
-        </div>
         <div className="flex flex-col flex-1">
           <div className="flex gap-2 items-center">
             <Link to={`/profile/${postOwner.username}`} className="font-bold">
@@ -163,7 +160,6 @@ export const Post: React.FC<PostProps> = ({ post }) => {
                 {isLiked && (
                   <FaRegHeart className="w-4 h-4 cursor-pointer text-pink-500 " />
                 )}
-
                 <span
                   className={`text-sm text-slate-500 group-hover:text-pink-500 ${
                     isLiked ? "text-pink-500" : ""

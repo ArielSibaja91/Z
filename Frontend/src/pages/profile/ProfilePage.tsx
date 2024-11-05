@@ -212,7 +212,7 @@ export const ProfilePage = () => {
             </div>
           </>
         )}
-        <Posts />
+        {/*<Posts />*/}
       </div>
     </main>
   );
