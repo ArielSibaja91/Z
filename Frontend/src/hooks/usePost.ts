@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 type UsePostResult = {
     posts: PostType[] | null;
     isLoading: boolean;
+    addPost: (postData: { text: string; img: string | null;}) => Promise<void>;
     deletePost: (postId: string) => Promise<void>;
 }
 
@@ -60,5 +61,26 @@ export const usePost = (feedType?: string): UsePostResult => {
         }
     };
 
-    return { posts, isLoading, deletePost}
+    const addPost = async (postData: { text: string; img: string | null;}) => {
+        setIsLoading(true);
+        try {
+            const response = await axios.post("api/posts/create", postData);
+            const newPost = response.data;
+            setPosts((prevPosts) => 
+                prevPosts ? [newPost, ...prevPosts] : [newPost]
+            );
+            toast.success("Post created successfully");
+            console.log(response.data)
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+            toast.error(error.response?.data?.error || "Failed to add post");
+        } else {
+            toast.error("An unexpected error occurred.");
+        }
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    return { posts, isLoading, addPost, deletePost}
 };

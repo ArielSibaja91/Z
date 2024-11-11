@@ -11,13 +11,13 @@ export const RightPanel = () => {
         <div className="flex flex-col gap-4">
           {/* item */}
           {isLoading && (
-                <>
-                    <RightPanelSkeleton />
-                    <RightPanelSkeleton />
-                    <RightPanelSkeleton />
-                    <RightPanelSkeleton />
-                </>
-            )}
+            <>
+              <RightPanelSkeleton />
+              <RightPanelSkeleton />
+              <RightPanelSkeleton />
+              <RightPanelSkeleton />
+            </>
+          )}
           {!isLoading &&
             USERS_FOR_RIGHT_PANEL?.map((user) => (
               <Link
@@ -26,10 +26,11 @@ export const RightPanel = () => {
                 key={user._id}
               >
                 <div className="flex gap-2 items-center">
-                  <div className="avatar">
-                    <div className="w-8 rounded-full">
-                      <img src={user.profileImg || "/avatar-placeholder.png"} />
-                    </div>
+                  <div className="w-full">
+                    <img
+                      className="w-8 rounded-full"
+                      src={user.profileImg || "/avatar-placeholder.png"}
+                    />
                   </div>
                   <div className="flex flex-col">
                     <span className="font-semibold tracking-tight truncate w-28">

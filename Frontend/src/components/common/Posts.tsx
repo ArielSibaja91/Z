@@ -1,9 +1,14 @@
-import { usePost } from "../../hooks/usePost";
 import { Post } from "./Post";
 import { PostSkeleton } from "../skeletons/PostSkeleton";
+import { Post as PostType } from "../../types/postProps";
 
-export const Posts = ({ feedType }: { feedType?: string }) => {
-  const { posts, isLoading, deletePost } = usePost(feedType);
+type PostsProps = {
+  posts: PostType[] | null;
+  deletePost: (postId: string) => Promise<void>;
+  isLoading: boolean;
+};
+
+export const Posts: React.FC<PostsProps> = ({ posts, deletePost, isLoading}) => {
   return (
     <>
       {isLoading && (

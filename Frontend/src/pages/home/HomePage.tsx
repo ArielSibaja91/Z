@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { CreatePost } from "./CreatePost";
 import { Posts } from "../../components/common/Posts";
+import { usePost } from "../../hooks/usePost";
 
 export const HomePage = () => {
   const [feedType, setFeedType] = useState<string>("forYou");
+  const { posts, isLoading, addPost, deletePost } = usePost(feedType);
+
   return (
     <main className="flex-[4_4_0] mr-auto border-r border-white/20 min-h-screen">
       <header className="flex w-full border-b border-white/20">
@@ -29,10 +32,9 @@ export const HomePage = () => {
         </button>
       </header>
       {/*  CREATE POST INPUT */}
-      <CreatePost />
-
+      <CreatePost addPost={addPost} />
       {/* POSTS */}
-      <Posts feedType={feedType}/>
+      <Posts posts={posts} deletePost={deletePost} isLoading={isLoading} />
     </main>
   );
 };

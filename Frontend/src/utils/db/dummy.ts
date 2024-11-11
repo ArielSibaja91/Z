@@ -120,24 +120,24 @@ export const USERS_FOR_RIGHT_PANEL = [
 		_id: "1",
 		fullName: "John Doe",
 		username: "johndoe",
-		profileImg: "/vite.svg",
+		profileImg: "/avatar-placeholder.png",
 	},
 	{
 		_id: "2",
 		fullName: "Jane Doe",
 		username: "janedoe",
-		profileImg: "/vite.svg",
+		profileImg: "/avatar-placeholder.png",
 	},
 	{
 		_id: "3",
 		fullName: "Bob Doe",
 		username: "bobdoe",
-		profileImg: "/vite.svg",
+		profileImg: "/avatar-placeholder.png",
 	},
 	{
 		_id: "4",
 		fullName: "Daisy Doe",
 		username: "daisydoe",
-		profileImg: "/vite.svg",
+		profileImg: "/avatar-placeholder.png",
 	},
 ];
