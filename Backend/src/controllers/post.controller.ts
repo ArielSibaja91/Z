@@ -123,7 +123,12 @@ export const createPost = async (req: any, res: Response) => {
         });
         // Saves the post in the db
         await newPost.save();
-        res.status(201).json(newPost);
+        // Populates the response so the frontend can reach the user properties
+        const populatedPost = await newPost.populate({
+            path: "user",
+            select: "fullName username profileImg",
+        });
+        res.status(201).json(populatedPost);
     } catch (error) {
         console.log("Error in createPost controller", error);
         return res.status(500).json({ error: "Internal server error" });
