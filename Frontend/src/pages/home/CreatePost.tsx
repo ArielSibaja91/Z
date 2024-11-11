@@ -1,23 +1,25 @@
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
+import { useAuth } from "../../context/useAuth";
 import { CiImageOn } from "react-icons/ci";
 import { BsEmojiSmileFill } from "react-icons/bs";
 import { IoCloseSharp } from "react-icons/io5";
 
-export const CreatePost = () => {
+type CreatePostProps = {
+  addPost: (postData: { text: string; img: string | null }) => Promise<void>;
+}
+
+export const CreatePost: React.FC<CreatePostProps> = ({ addPost }) => {
+  const { user: authUser } = useAuth();
   const [text, setText] = useState<string>("");
   const [img, setImg] = useState<string | null>(null);
-
+  const isLoading: boolean = false;
   const imgRef = useRef<HTMLInputElement | null>(null);
-  const isPending: boolean = false;
-	const isError: boolean = false;
 
-  const data = {
-		profileImg: "/vite.svg",
-	};
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert("Post submited successfully");
+    await addPost({ text, img });
+    setText("");
+    setImg(null);
   };
 
   const handleImgChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +37,7 @@ export const CreatePost = () => {
     <div className="flex p-4 items-start gap-4 border-b border-white/20">
       <div className="avatar">
         <div className="w-8 rounded-full">
-          <img src={data.profileImg || "/vite.svg"} />
+          <img src={authUser?.profileImg || "/vite.svg"} />
         </div>
       </div>
       <form className="flex flex-col gap-2 w-full" onSubmit={handleSubmit}>
@@ -59,6 +61,7 @@ export const CreatePost = () => {
             <img
               src={img}
               className="w-full mx-auto h-72 object-contain rounded"
+              alt={`user ${authUser?.fullName}`}
             />
           </div>
         )}
@@ -73,10 +76,9 @@ export const CreatePost = () => {
           </div>
           <input type="file" accept="/image*" hidden ref={imgRef} onChange={handleImgChange} />
           <button className="text-white bg-primary rounded-full px-5 py-1 font-semibold hover:brightness-[.85] duration-150">
-            {isPending ? "Posting..." : "Post"}
+            {isLoading ? "Posting..." : "Post"}
           </button>
         </div>
-        {isError && <div className="text-red-500">Something went wrong</div>}
       </form>
     </div>
   );

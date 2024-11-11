@@ -94,11 +94,11 @@ export const Post: React.FC<
               className="bg-black text-white rounded outline outline-1 outline-white/35"
             >
               <div className="py-6 px-12">
-                <h3 className="font-bold text-lg mb-4">COMMENTS</h3>
+                <h3 className="font-bold text-lg mb-4">Comments</h3>
                 <div className="flex flex-col gap-6 max-h-60 overflow-auto">
                   {post.comments.length === 0 && (
                     <p className="text-sm text-slate-500">
-                      No comments yet 🤔 Be the first one 😉
+                      No comments yet. Be the first one!
                     </p>
                   )}
                   {post.comments.map((comment) => (
