@@ -8,6 +8,7 @@ export interface User {
     bio?: string;
     link?: string;
     following?: string[];
+    isFollowing?: boolean;
     followers?: string[];
 };
 

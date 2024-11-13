@@ -3,7 +3,7 @@ import { RightPanelSkeleton } from "../skeletons/RightPanelSkeleton";
 import { useUser } from "../../hooks/useUser";
 
 export const RightPanel = () => {
-  const { isLoading, suggestedUsers } = useUser();
+  const { isLoading, suggestedUsers, followUnfollowUser } = useUser();
   // Just in case that they are not any suggested users
   if(suggestedUsers?.length === 0) return <div className="md:w-64 w-0"></div>
   return (
@@ -11,7 +11,6 @@ export const RightPanel = () => {
       <div className="bg-[#16181C] p-4 rounded-md sticky top-2">
         <p className="font-bold">Who to follow</p>
         <div className="flex flex-col gap-4">
-          {/* item */}
           {isLoading && (
             <>
               <RightPanelSkeleton />
@@ -46,9 +45,16 @@ export const RightPanel = () => {
                 <div>
                   <button
                     className="bg-white px-3 py-1 text-black hover:bg-white hover:opacity-90 rounded-full"
-                    onClick={(e) => e.preventDefault()}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (user.isFollowing) {
+                        followUnfollowUser(user._id!, true);
+                      } else {
+                        followUnfollowUser(user._id!, false);
+                      }
+                    }}
                   >
-                    Follow
+                    {user.isFollowing ? "Unfollow" : "Follow"}
                   </button>
                 </div>
               </Link>
