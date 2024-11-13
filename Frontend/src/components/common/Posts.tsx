@@ -19,7 +19,7 @@ export const Posts: React.FC<PostsProps> = ({ posts, deletePost, isLoading}) => 
         </div>
       )}
       {!isLoading && posts?.length === 0 && (
-        <p className="text-center my-4">No posts in this tab. Switch 👻</p>
+        <p className="text-center my-4">No posts in this tab.</p>
       )}
       {!isLoading && posts && (
         <div>

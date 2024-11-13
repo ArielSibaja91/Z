@@ -5,6 +5,7 @@ import { User } from "../types/postProps"
 type useUserResult = {
     isLoading: boolean;
     suggestedUsers: User[] | null;
+    followUnfollowUser: (userId: string, isFollowing: boolean) => void
 }
 
 export const useUser = (): useUserResult => {
@@ -26,7 +27,26 @@ export const useUser = (): useUserResult => {
             }
         }
         getSuggestedUsers();
-    },[]);
+    }, []);
 
-    return { isLoading, suggestedUsers }
+    const followUnfollowUser = async (userId: string, isFollowing: boolean) => {
+        try {
+            const response = await axios.post(`/api/users/follow/${userId}`);
+            if (response.status === 200) {
+                setSuggestedUsers((prevUsers) =>
+                    prevUsers?.map((user) =>
+                        user._id === userId
+                            ? { ...user, isFollowing: !isFollowing }
+                            : user
+                    ) || []
+                );
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return (error.response?.data?.error || "Something went wrong");
+            }
+        }
+    };
+
+    return { isLoading, suggestedUsers, followUnfollowUser }
 }
