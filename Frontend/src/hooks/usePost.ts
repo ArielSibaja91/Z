@@ -6,11 +6,12 @@ import toast from "react-hot-toast";
 type UsePostResult = {
     posts: PostType[] | null;
     isLoading: boolean;
-    addPost: (postData: { text: string; img: string | null;}) => Promise<void>;
+    addPost: (postData: { text: string; img: string | null; }) => Promise<void>;
     deletePost: (postId: string) => Promise<void>;
+    likePost: (postId: string) => Promise<void>;
 }
 
-export const usePost = (feedType?: string): UsePostResult => {
+export const usePost = (feedType?: string, authUserId?: string): UsePostResult => {
     const [posts, setPosts] = useState<PostType[] | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -61,26 +62,58 @@ export const usePost = (feedType?: string): UsePostResult => {
         }
     };
 
-    const addPost = async (postData: { text: string; img: string | null;}) => {
+    const addPost = async (postData: { text: string; img: string | null; }) => {
         setIsLoading(true);
         try {
             const response = await axios.post("api/posts/create", postData);
             const newPost = response.data;
-            setPosts((prevPosts) => 
+            setPosts((prevPosts) =>
                 prevPosts ? [newPost, ...prevPosts] : [newPost]
             );
             toast.success("Post created successfully");
             console.log(response.data)
         } catch (error) {
             if (axios.isAxiosError(error)) {
-            toast.error(error.response?.data?.error || "Failed to add post");
-        } else {
-            toast.error("An unexpected error occurred.");
-        }
+                toast.error(error.response?.data?.error || "Failed to add post");
+            } else {
+                toast.error("An unexpected error occurred.");
+            }
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
-    return { posts, isLoading, addPost, deletePost}
+    const likePost = async (postId: string) => {
+        if (!posts || !authUserId) return;
+        // Copy of the current posts
+        const previousPosts = [...posts];
+        // Optimistic UI implementation
+        setPosts((prevPosts) =>
+            prevPosts
+                ? prevPosts.map((post) =>
+                    post._id === postId
+                        ? {
+                            ...post,
+                            likes: post.likes.includes(authUserId)
+                                ? post.likes.filter((id) => id !== authUserId)
+                                : [...post.likes, authUserId],
+                        }
+                        : post
+                )
+                : []
+        );
+        try {
+            await axios.post(`/api/posts/like/${postId}`);
+        } catch (error) {
+            // In case the operation in the server fails, return the state of posts to the copy created
+            setPosts(previousPosts);
+            if (axios.isAxiosError(error)) {
+                toast.error(error.response?.data?.error || "Failed to like the post");
+            } else {
+                toast.error("An unexpected error occurred.");
+            }
+        }
+    };
+
+    return { posts, isLoading, addPost, deletePost, likePost }
 };

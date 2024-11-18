@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { RightPanelSkeleton } from "../skeletons/RightPanelSkeleton";
 import { useUser } from "../../hooks/useUser";
+import toast from "react-hot-toast";
 
 export const RightPanel = () => {
   const { isLoading, suggestedUsers, followUnfollowUser } = useUser();
@@ -49,8 +50,10 @@ export const RightPanel = () => {
                       e.preventDefault();
                       if (user.isFollowing) {
                         followUnfollowUser(user._id!, true);
+                        toast.success("User unfollowed");
                       } else {
                         followUnfollowUser(user._id!, false);
+                        toast.success("User followed");
                       }
                     }}
                   >

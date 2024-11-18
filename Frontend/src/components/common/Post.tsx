@@ -11,18 +11,16 @@ import { LoadingSpinner } from "./LoadingSpinner";
 
 export const Post: React.FC<
   PostProps & { deletePost: (postId: string) => void }
-> = ({ post, deletePost }) => {
+& { likePost: (postId: string) => void }> = ({ post, deletePost, likePost }) => {
   const { modalRef, backdropRef, openModal, closeModal } = useModal();
   const { user: authUser } = useAuth();
   const { isLoading } = usePost();
   const [comment, setComment] = useState<string>("");
+
   const postOwner = post.user;
-  const isLiked: boolean = false;
-
+  const isLiked: boolean = authUser?._id ? post.likes.includes(authUser._id) : false;
   const isMyPost: boolean = authUser?._id === post.user._id;
-
   const formattedDate: string = "1h";
-
   const isCommenting: boolean = false;
 
   const handleDeletePost = () => {
@@ -33,7 +31,10 @@ export const Post: React.FC<
     e.preventDefault();
   };
 
-  const handleLikePost = () => {};
+  const handleLikePost = () => {
+    if(isLoading) return;
+    likePost(post._id);
+  };
 
   return (
     <div className="flex gap-2 items-start p-4 border-b border-white/20">
@@ -162,11 +163,11 @@ export const Post: React.FC<
                 <FaRegHeart className="w-4 h-4 cursor-pointer text-slate-500 group-hover:text-pink-500" />
               )}
               {isLiked && (
-                <FaRegHeart className="w-4 h-4 cursor-pointer text-pink-500 " />
+                <FaRegHeart className="w-4 h-4 cursor-pointer fill-pink-500 " />
               )}
               <span
-                className={`text-sm text-slate-500 group-hover:text-pink-500 ${
-                  isLiked ? "text-pink-500" : ""
+                className={`text-sm group-hover:text-pink-500 ${
+                  isLiked ? "text-pink-500" : "text-slate-500"
                 }`}
               >
                 {post.likes.length}
