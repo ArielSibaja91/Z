@@ -6,10 +6,11 @@ type PostsProps = {
   posts: PostType[] | null;
   deletePost: (postId: string) => Promise<void>;
   likePost: (postId: string) => Promise<void>;
+  commentPost: (postId: string, text: string) => Promise<void>;
   isLoading: boolean;
 };
 
-export const Posts: React.FC<PostsProps> = ({ posts, deletePost, likePost, isLoading}) => {
+export const Posts: React.FC<PostsProps> = ({ posts, deletePost, likePost, commentPost, isLoading}) => {
   return (
     <>
       {isLoading && (
@@ -25,7 +26,7 @@ export const Posts: React.FC<PostsProps> = ({ posts, deletePost, likePost, isLoa
       {!isLoading && posts && (
         <div>
           {posts.map((post) => (
-            <Post key={post._id} post={post} deletePost={deletePost} likePost={likePost} />
+            <Post key={post._id} post={post} deletePost={deletePost} likePost={likePost} commentPost={commentPost} />
           ))}
         </div>
       )}

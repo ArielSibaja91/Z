@@ -7,7 +7,7 @@ import { usePost } from "../../hooks/usePost";
 export const HomePage = () => {
   const {user: authUser} = useAuth();
   const [feedType, setFeedType] = useState<string>("forYou");
-  const { posts, isLoading, addPost, deletePost, likePost } = usePost(feedType, authUser?._id);
+  const { posts, isLoading, addPost, deletePost, likePost, commentPost } = usePost(feedType, authUser);
 
   return (
     <main className="flex-[4_4_0] mr-auto border-r border-white/20 min-h-screen">
@@ -36,7 +36,7 @@ export const HomePage = () => {
       {/*  CREATE POST INPUT */}
       <CreatePost addPost={addPost} />
       {/* POSTS */}
-      <Posts posts={posts} deletePost={deletePost} likePost={likePost} isLoading={isLoading} />
+      <Posts posts={posts} deletePost={deletePost} likePost={likePost} commentPost={commentPost} isLoading={isLoading} />
     </main>
   );
 };

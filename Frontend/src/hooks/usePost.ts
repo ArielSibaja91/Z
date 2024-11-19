@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Post as PostType } from "../types/postProps";
+import { Post as PostType, User } from "../types/postProps";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -9,9 +9,10 @@ type UsePostResult = {
     addPost: (postData: { text: string; img: string | null; }) => Promise<void>;
     deletePost: (postId: string) => Promise<void>;
     likePost: (postId: string) => Promise<void>;
+    commentPost: (postId: string, text: string) => Promise<void>;
 }
 
-export const usePost = (feedType?: string, authUserId?: string): UsePostResult => {
+export const usePost = (feedType?: string, authUser?: User | null ): UsePostResult => {
     const [posts, setPosts] = useState<PostType[] | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -84,7 +85,7 @@ export const usePost = (feedType?: string, authUserId?: string): UsePostResult =
     };
 
     const likePost = async (postId: string) => {
-        if (!posts || !authUserId) return;
+        if (!posts || !authUser?._id) return;
         // Copy of the current posts
         const previousPosts = [...posts];
         // Optimistic UI implementation
@@ -94,9 +95,9 @@ export const usePost = (feedType?: string, authUserId?: string): UsePostResult =
                     post._id === postId
                         ? {
                             ...post,
-                            likes: post.likes.includes(authUserId)
-                                ? post.likes.filter((id) => id !== authUserId)
-                                : [...post.likes, authUserId],
+                            likes: post.likes.includes(authUser._id as string)
+                                ? post.likes.filter((id) => id !== authUser._id)
+                                : [...post.likes, authUser._id as string],
                         }
                         : post
                 )
@@ -115,5 +116,47 @@ export const usePost = (feedType?: string, authUserId?: string): UsePostResult =
         }
     };
 
-    return { posts, isLoading, addPost, deletePost, likePost }
+    const commentPost = async (postId: string, text: string) => {
+        if(!posts || !authUser?._id) return;
+        const tempId = Date.now().toString();
+        const previousPosts = [...posts];
+        const newComment = { 
+            _id: tempId, 
+            user: {
+                _id: authUser._id,
+                fullName: authUser?.fullName,
+                username: authUser?.username,
+                profileImg: authUser?.profileImg
+                
+            }, 
+            text 
+        };
+        setPosts((prevPosts) => 
+            prevPosts
+                ? prevPosts.map((post) => 
+                    post._id === postId
+                        ? {
+                            ...post,
+                            comments: [
+                                ...post.comments, newComment
+                            ]
+                        }
+                    : post
+                )
+            : []
+        );
+        try {
+            await axios.post(`/api/posts/comment/${postId}`, {text});
+            toast.success("Comment added successfully");
+        } catch (error) {
+            setPosts(previousPosts);
+            if (axios.isAxiosError(error)) {
+                toast.error(error.response?.data?.error || "Failed to comment on the post");
+            } else {
+                toast.error("An unexpected error occurred.");
+            };
+        };
+    };
+
+    return { posts, isLoading, addPost, deletePost, likePost, commentPost }
 };
