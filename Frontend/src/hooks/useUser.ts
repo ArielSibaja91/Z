@@ -30,23 +30,26 @@ export const useUser = (): useUserResult => {
     }, []);
 
     const followUnfollowUser = async (userId: string, isFollowing: boolean) => {
+        if(!suggestedUsers) return;
+
+        const previousUsers = [...suggestedUsers];
+
+        setSuggestedUsers((prevUsers) =>
+            prevUsers?.map((user) =>
+                user._id === userId
+                    ? { ...user, isFollowing: !isFollowing }
+                    : user
+            ) || []
+        );
         try {
-            const response = await axios.post(`/api/users/follow/${userId}`);
-            if (response.status === 200) {
-                setSuggestedUsers((prevUsers) =>
-                    prevUsers?.map((user) =>
-                        user._id === userId
-                            ? { ...user, isFollowing: !isFollowing }
-                            : user
-                    ) || []
-                );
-            }
+            await axios.post(`/api/users/follow/${userId}`);
         } catch (error) {
+            setSuggestedUsers(previousUsers);
             if (axios.isAxiosError(error)) {
                 return (error.response?.data?.error || "Something went wrong");
-            }
-        }
+            };
+        };
     };
 
     return { isLoading, suggestedUsers, followUnfollowUser }
-}
+};
