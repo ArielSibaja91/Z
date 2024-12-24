@@ -5,7 +5,8 @@ import { User } from "../types/postProps"
 type useUserResult = {
     isLoading: boolean;
     suggestedUsers: User[] | null;
-    followUnfollowUser: (userId: string, isFollowing: boolean) => void
+    followUnfollowUser: (userId: string, isFollowing: boolean) => void;
+    getUser: (username: string) => Promise<User | null>;
 }
 
 export const useUser = (): useUserResult => {
@@ -51,5 +52,20 @@ export const useUser = (): useUserResult => {
         };
     };
 
-    return { isLoading, suggestedUsers, followUnfollowUser }
+    const getUser = async (username: string) => {
+        setIsLoading(true);
+        try {
+            const response = await axios.get(`/api/users/profile/${username}`);
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                return (error.response?.data?.error || "Something went wrong");
+            };
+            return null;
+        } finally {
+            setIsLoading(false);
+        };
+    };
+
+    return { isLoading, suggestedUsers, followUnfollowUser, getUser }
 };

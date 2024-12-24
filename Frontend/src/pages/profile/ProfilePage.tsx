@@ -1,37 +1,48 @@
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useUser } from "../../hooks/useUser";
+import { useAuth } from "../../context/useAuth";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { usePost } from "../../hooks/usePost";
 import { User } from "../../types/postProps";
-import { Posts } from "../../components/common/Posts";
+{/* import { Posts } from "../../components/common/Posts"; */}
 import { ProfileHeaderSkeleton } from "../../components/skeletons/ProfileHeaderSkeleton";
 import { EditProfileModal } from "./EditProfileModal";
-import { POSTS } from "../../utils/db/dummy";
 import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 
 export const ProfilePage = () => {
+  const { username } = useParams<{ username: string }>();
+  const { getUser } = useUser();
+  const { user: authUser } = useAuth();
+  const [feedType, setFeedType] = useState<string>("posts");
+  const { posts, isLoading } = usePost(feedType);
+  const [user, setUser] = useState<User | null>(null);
+  const [isMyProfile, setIsMyProfile] = useState<boolean>(false);
   const [coverImg, setCoverImg] = useState<string | null>(null);
   const [profileImg, setProfileImg] = useState<string | null>(null);
-  const [feedType, setFeedType] = useState<string>("posts");
 
   const coverImgRef = useRef<HTMLInputElement | null>(null);
   const profileImgRef = useRef<HTMLInputElement | null>(null);
 
-  const isLoading: boolean = false;
-  const isMyProfile: boolean = true;
+  const currentUser = authUser?.username;
 
-  const user: User = {
-    _id: "1",
-    fullName: "Ariel Sibaja",
-    username: "arielsibaja91",
-    profileImg: "/vite.svg",
-    coverImg: "/cover.png",
-    bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    link: "https://youtube.com/",
-    following: ["1", "2", "3"],
-    followers: ["1", "2", "3"],
-  };
+  useEffect(() => {
+    const fetchUser = async () => {
+      if(!username) return;
+
+      const fetchedUser = await getUser(username)
+      setUser(fetchedUser);
+      if(fetchedUser?.username === currentUser) {
+        setIsMyProfile(true);
+      };
+    };
+    if(username) {
+      fetchUser();
+    }
+  }, [username, currentUser]);
 
   const handleImgChange = (
     e: ChangeEvent<HTMLInputElement>,
@@ -70,7 +81,7 @@ export const ProfilePage = () => {
               <div className="flex flex-col">
                 <p className="font-bold text-lg">{user?.fullName}</p>
                 <span className="text-sm text-slate-500">
-                  {POSTS?.length} posts
+                  {posts?.length} posts
                 </span>
               </div>
             </div>
@@ -114,14 +125,14 @@ export const ProfilePage = () => {
                       "/avatar-placeholder.png"
                     }
                   />
+                  {isMyProfile && (
                   <div className="absolute top-5 right-3 p-1 bg-primary rounded-full group-hover/avatar:opacity-100 opacity-0 transition duration-200 cursor-pointer">
-                    {isMyProfile && (
                       <MdEdit
                         className="w-4 h-4 text-white"
                         onClick={() => profileImgRef.current?.click()}
                       />
-                    )}
                   </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -212,7 +223,7 @@ export const ProfilePage = () => {
             </div>
           </>
         )}
-        {/*<Posts />*/}
+        {/*<Posts posts={posts} isLoading={isLoading} deletePost={deletePost} likePost={likePost} commentPost={commentPost} />*/}
       </div>
     </main>
   );
