@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { useModal } from "../../hooks/useModal";
-import { useAuth } from "../../context/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { usePost } from "../../hooks/usePost";
 import { Link } from "react-router-dom";
 import { FaRegComment, FaTrash, FaRegHeart } from "react-icons/fa";

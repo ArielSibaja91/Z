@@ -7,11 +7,11 @@ import { SideBar } from "./components/common/SideBar";
 import { RightPanel } from "./components/common/RightPanel";
 import { ProfilePage } from "./pages/profile/ProfilePage";
 import { Toaster } from "react-hot-toast";
-import { useAuth } from "./context/useAuth";
+import { useAuth } from "./hooks/useAuth";
 import { LoadingSpinner } from "./components/common/LoadingSpinner";
 
 export const App = () => {
-  const { user: authUser, isLoading } = useAuth();
+  const { user, isLoading } = useAuth();
   if (isLoading) {
 		return (
 			<div className="h-screen flex justify-center items-center">
@@ -22,16 +22,16 @@ export const App = () => {
   return (
     <div className="flex max-w-6xl mx-auto">
       {/* SideBar only for authenticated users */}
-			{authUser && <SideBar />}
+			{user && <SideBar />}
       <Routes>
-        <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />}/>
-        <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />}/>
-        <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />}/>
-        <Route path="/notifications" element={authUser ? <NotificationPage /> : <Navigate to="/login" />}/>
-        <Route path="/profile/:username" element={authUser ? <ProfilePage /> : <Navigate to="/login" />}/>
+        <Route path="/" element={user ? <HomePage /> : <Navigate to="/login" />}/>
+        <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />}/>
+        <Route path="/signup" element={!user ? <SignUpPage /> : <Navigate to="/" />}/>
+        <Route path="/notifications" element={user ? <NotificationPage /> : <Navigate to="/login" />}/>
+        <Route path="/profile/:username" element={user ? <ProfilePage /> : <Navigate to="/login" />}/>
       </Routes>
       {/* Right Panel only for authenticated users */}
-			{authUser && <RightPanel />}
+			{user && <RightPanel />}
       <Toaster />
     </div>
   );

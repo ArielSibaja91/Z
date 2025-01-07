@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "../../context/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { CreatePost } from "./CreatePost";
 import { Posts } from "../../components/common/Posts";
 import { usePost } from "../../hooks/usePost";

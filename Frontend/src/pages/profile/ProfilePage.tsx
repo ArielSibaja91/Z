@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useUser } from "../../hooks/useUser";
-import { useAuth } from "../../context/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { usePost } from "../../hooks/usePost";

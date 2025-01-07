@@ -8,7 +8,7 @@ import {
 } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 import { FormData } from "../../../types/formData";
-import { useAuth } from "../../../context/useAuth";
+import { useAuth } from "../../../hooks/useAuth";
 
 export const SignUpPage = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -17,26 +17,11 @@ export const SignUpPage = () => {
     fullName: "",
     password: "",
   });
-  const { signup } = useAuth();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
+  const { signup, isLoading, isError } = useAuth();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    setIsLoading(true);
-    setIsError(false);
-
-    try {
-      await signup(formData);
-    } catch (error) {
-      setIsError(true);
-      console.log(error);
-      setTimeout(() => {
-        setIsError(false);
-      }, 4000);
-    } finally {
-      setIsLoading(false);
-    }
+    signup(formData);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
