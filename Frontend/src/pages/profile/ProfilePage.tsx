@@ -42,7 +42,7 @@ export const ProfilePage = () => {
       }
     };
     fetchAndCheckUser();
-  }, [username, user?.username]);
+  }, [username]);
 
   const handleImgChange = (
     e: ChangeEvent<HTMLInputElement>,

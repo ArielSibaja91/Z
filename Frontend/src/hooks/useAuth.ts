@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../store/store";
-import { login, logout, fetchUser } from "../store/auth/authSlice";
+import { login, logout, fetchUser } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";

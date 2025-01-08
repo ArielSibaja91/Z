@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import type { RootState, AppDispatch } from "../store/store";
-import { fetchSuggestedUsers, followUnfollowUser, getUserProfile } from "../store/user/userSlice";
+import { fetchSuggestedUsers, followUnfollowUser, getUserProfile } from "../features/user/userSlice";
 
 export const useUser = () => {
     const dispatch = useDispatch<AppDispatch>();

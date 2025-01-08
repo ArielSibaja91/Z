@@ -54,7 +54,7 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchUser.pending, (state) => {
+            .addCase(fetchUser.pending, (state: { isLoading: boolean; }) => {
                 state.isLoading = true;
             })
             .addCase(fetchUser.fulfilled, (state, action: PayloadAction<User>) => {
