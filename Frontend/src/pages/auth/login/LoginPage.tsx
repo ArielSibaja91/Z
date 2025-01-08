@@ -3,32 +3,18 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { FormData } from "../../../types/formData";
 import { ZSVG } from "../../../components/svgs/ZSVG";
 import { MdOutlineMail, MdPassword } from "react-icons/md";
-import { useAuth } from "../../../context/useAuth";
+import { useAuth } from "../../../hooks/useAuth";
 
 export const LoginPage = () => {
   const [formData, setFormData] = useState<FormData>({
     username: "",
     password: "",
   });
-  const { login } = useAuth();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
+  const { login, isLoading, isError } = useAuth();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    setIsLoading(true);
-    setIsError(false);
-    try {
-      await login(formData);
-    } catch (error) {
-      setIsError(true);
-      console.log(error);
-      setTimeout(() => {
-        setIsError(false);
-      }, 4000);
-    } finally {
-      setIsLoading(false);
-    }
+    login(formData);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {

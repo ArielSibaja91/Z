@@ -13,7 +13,7 @@ type UsePostResult = {
 }
 
 export const usePost = (feedType?: string, authUser?: User | null ): UsePostResult => {
-    const [posts, setPosts] = useState<PostType[] | null>(null);
+    const [posts, setPosts] = useState<PostType[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const getPostsEndpoint = useCallback(() => {
@@ -22,10 +22,14 @@ export const usePost = (feedType?: string, authUser?: User | null ): UsePostResu
                 return "api/posts/all";
             case "following":
                 return "api/posts/following";
+            case "posts":
+                return `api/posts/user/${authUser?.username}`;
+            case "likes":
+                return `api/posts/likes/${authUser?._id}`;
             default:
                 return "api/posts/all";
         }
-    }, [feedType]);
+    }, [feedType, authUser]);
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -49,7 +53,7 @@ export const usePost = (feedType?: string, authUser?: User | null ): UsePostResu
         try {
             await axios.delete(`/api/posts/${postId}`);
             setPosts((prevPosts) =>
-                prevPosts ? prevPosts.filter((post) => post._id !== postId) : null
+                prevPosts ? prevPosts.filter((post) => post._id !== postId) : []
             );
             toast.success("Post deleted successfully");
         } catch (error) {

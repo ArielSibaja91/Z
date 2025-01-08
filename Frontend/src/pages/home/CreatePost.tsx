@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
-import { useAuth } from "../../context/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { CiImageOn } from "react-icons/ci";
 import { BsEmojiSmileFill } from "react-icons/bs";
 import { IoCloseSharp } from "react-icons/io5";
@@ -9,7 +9,7 @@ type CreatePostProps = {
 };
 
 export const CreatePost: React.FC<CreatePostProps> = ({ addPost }) => {
-  const { user: authUser } = useAuth();
+  const { user } = useAuth();
   const [text, setText] = useState<string>("");
   const [img, setImg] = useState<string | null>(null);
   const isLoading: boolean = false;
@@ -37,7 +37,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ addPost }) => {
     <div className="flex p-4 items-start gap-4 border-b border-white/20">
       <img
         className="w-8 rounded-full"
-        src={authUser?.profileImg || "/avatar-placeholder.png"}
+        src={user?.profileImg || "/avatar-placeholder.png"}
       />
       <form className="flex flex-col gap-2 w-full" onSubmit={handleSubmit}>
         <textarea
@@ -60,7 +60,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ addPost }) => {
             <img
               src={img}
               className="w-full mx-auto h-72 object-contain rounded"
-              alt={`user ${authUser?.fullName}`}
+              alt={`user ${user?.fullName}`}
             />
           </div>
         )}

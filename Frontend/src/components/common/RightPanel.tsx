@@ -4,7 +4,7 @@ import { useUser } from "../../hooks/useUser";
 import toast from "react-hot-toast";
 
 export const RightPanel = () => {
-  const { isLoading, suggestedUsers, followUnfollowUser } = useUser();
+  const { suggestedUsers, followUnfollowUser, isLoading } = useUser();
   // Just in case that they are not any suggested users
   if(suggestedUsers?.length === 0) return <div className="md:w-64 w-0"></div>
   return (

@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { useModal } from "../../hooks/useModal";
-import { useAuth } from "../../context/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { usePost } from "../../hooks/usePost";
 import { Link } from "react-router-dom";
 import { FaRegComment, FaTrash, FaRegHeart } from "react-icons/fa";
@@ -8,6 +8,7 @@ import { BiRepost } from "react-icons/bi";
 import { FaRegBookmark, FaArrowLeft } from "react-icons/fa6";
 import { PostProps } from "../../types/postProps";
 import { LoadingSpinner } from "./LoadingSpinner";
+import { formatPostDate } from "../../utils/date/date";
 
 export const Post: React.FC<
   PostProps & { deletePost: (postId: string) => void } & {
@@ -24,7 +25,7 @@ export const Post: React.FC<
     ? post.likes.includes(authUser._id)
     : false;
   const isMyPost: boolean = authUser?._id === post.user._id;
-  const formattedDate: string = "1h";
+  const formattedDate = formatPostDate(post.createdAt);
 
   const handleDeletePost = () => {
     deletePost(post._id);
@@ -183,7 +184,7 @@ export const Post: React.FC<
             </div>
           </div>
           <div className="flex w-1/3 justify-end gap-2 items-center">
-            <FaRegBookmark className="w-4 h-4 text-slate-500 cursor-pointer" />
+            <FaRegBookmark className="w-4 h-4 text-slate-500 cursor-pointer hover:fill-sky-400 duration-200" />
           </div>
         </div>
       </div>

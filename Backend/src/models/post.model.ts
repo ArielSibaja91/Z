@@ -18,6 +18,9 @@ const postSchema = new mongoose.Schema({
             ref: 'User',
         },
     ],
+    createdAt: {
+        type: Date,
+    },
     comments: [
         {
             text: {

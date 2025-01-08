@@ -25,6 +25,7 @@ export interface Post {
     img?: string;
     comments: Comment[];
     likes: string[];
+    createdAt: Date;
 };
 
 export interface PostProps {
