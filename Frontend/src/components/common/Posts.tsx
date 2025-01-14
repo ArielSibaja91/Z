@@ -1,35 +1,31 @@
-import { Post } from "./Post";
-import { PostSkeleton } from "../skeletons/PostSkeleton";
+import { usePost } from "../../hooks/usePost";
 import { Post as PostType } from "../../types/postProps";
+import { PostSkeleton } from "../skeletons/PostSkeleton";
+import { Post } from "./Post";
 
 type PostsProps = {
-  posts: PostType[] | null;
-  deletePost: (postId: string) => Promise<void>;
-  likePost: (postId: string) => Promise<void>;
-  commentPost: (postId: string, text: string) => Promise<void>;
+  posts: PostType[] | null | undefined;
   isLoading: boolean;
 };
 
-export const Posts: React.FC<PostsProps> = ({ posts, deletePost, likePost, commentPost, isLoading}) => {
+export const Posts: React.FC<PostsProps> = ({ posts, isLoading }) => {
+  const { deletePostAction, likePostAction, commentPostAction } = usePost();
+  if (!Array.isArray(posts) || posts.length === 0) {
+    return <p>No posts available.</p>;
+  };
   return (
     <>
-      {isLoading && (
-        <div className="flex flex-col justify-center">
-          <PostSkeleton />
-          <PostSkeleton />
-          <PostSkeleton />
-        </div>
-      )}
-      {!isLoading && posts?.length === 0 && (
-        <p className="text-center my-4">No posts in this tab.</p>
-      )}
-      {!isLoading && posts && (
-        <div>
-          {posts.map((post) => (
-            <Post key={post._id} post={post} deletePost={deletePost} likePost={likePost} commentPost={commentPost} />
-          ))}
-        </div>
-      )}
+      {isLoading && <PostSkeleton />}
+      {!isLoading && posts && posts.map((post) => (
+        <Post
+          key={post._id}
+          post={post}
+          isLoading={isLoading}
+          deletePost={deletePostAction}
+          likePost={likePostAction}
+          commentPost={commentPostAction}
+        />
+      ))}
     </>
   );
 };
