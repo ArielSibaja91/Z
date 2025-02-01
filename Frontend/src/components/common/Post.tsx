@@ -1,7 +1,6 @@
 import { FormEvent, useState } from "react";
 import { useModal } from "../../hooks/useModal";
 import { useAuth } from "../../hooks/useAuth";
-import { usePost } from "../../hooks/usePost";
 import { Link } from "react-router-dom";
 import { FaRegComment, FaTrash, FaRegHeart } from "react-icons/fa";
 import { BiRepost } from "react-icons/bi";
@@ -11,20 +10,25 @@ import { LoadingSpinner } from "./LoadingSpinner";
 import { formatPostDate } from "../../utils/date/date";
 
 export const Post: React.FC<
-  PostProps & { deletePost: (postId: string) => void } & {
+  PostProps & {
+    deletePost: (postId: string) => void;
     likePost: (postId: string) => void;
-  } & { commentPost: (postId: string, text: string) => void }
-> = ({ post, deletePost, likePost, commentPost }) => {
+    commentPost: (postId: string, text: string) => void;
+    isLoading: boolean;
+  }
+> = ({ post, deletePost, likePost, commentPost, isLoading }) => {
+  // Validación temprana para evitar errores si el post es null o undefined
+  if (!post) return null;
+
   const { modalRef, backdropRef, openModal, closeModal } = useModal();
   const { user: authUser } = useAuth();
-  const { isLoading } = usePost();
   const [comment, setComment] = useState<string>("");
 
   const postOwner = post.user;
-  const isLiked: boolean = authUser?._id
-    ? post.likes.includes(authUser._id)
+  const isLiked = authUser?._id
+    ? post.likes?.includes(authUser._id) || false
     : false;
-  const isMyPost: boolean = authUser?._id === post.user._id;
+  const isMyPost = authUser?._id === post.user._id;
   const formattedDate = formatPostDate(post.createdAt);
 
   const handleDeletePost = () => {
@@ -48,6 +52,7 @@ export const Post: React.FC<
         <img
           className="w-8 rounded-full overflow-hidden"
           src={postOwner.profileImg || "/avatar-placeholder.png"}
+          alt="Profile"
         />
       </Link>
       <div className="flex flex-col flex-1">
@@ -76,11 +81,11 @@ export const Post: React.FC<
         </div>
         <div className="flex flex-col gap-3 overflow-hidden">
           <span>{post.text}</span>
-          {post.img && (
+          {post?.img && (
             <img
               src={post.img}
               className="h-80 object-contain rounded-lg border border-white/20"
-              alt="of the post"
+              alt="Post image"
             />
           )}
         </div>
@@ -90,9 +95,9 @@ export const Post: React.FC<
               className="flex gap-1 items-center cursor-pointer group"
               onClick={openModal}
             >
-              <FaRegComment className="w-4 h-4  text-slate-500 group-hover:text-sky-400" />
+              <FaRegComment className="w-4 h-4 text-slate-500 group-hover:text-sky-400" />
               <span className="text-sm text-slate-500 group-hover:text-sky-400">
-                {post.comments.length}
+                {post.comments?.length || 0}
               </span>
             </div>
             <div
@@ -106,12 +111,12 @@ export const Post: React.FC<
               <div className="py-6 px-12">
                 <h3 className="font-bold text-lg mb-4">Comments</h3>
                 <div className="flex flex-col gap-6 max-h-60 overflow-auto">
-                  {post.comments.length === 0 && (
+                  {post.comments?.length === 0 && (
                     <p className="text-sm text-slate-500">
                       No comments yet. Be the first one!
                     </p>
                   )}
-                  {post.comments.map((comment) => (
+                  {post.comments?.map((comment) => (
                     <div key={comment._id} className="flex gap-2 items-start">
                       <div className="w-8">
                         <img
@@ -119,6 +124,7 @@ export const Post: React.FC<
                           src={
                             comment.user.profileImg || "/avatar-placeholder.png"
                           }
+                          alt="Comment profile"
                         />
                       </div>
                       <div className="flex flex-col">
@@ -159,7 +165,7 @@ export const Post: React.FC<
               </button>
             </dialog>
             <div className="flex gap-1 items-center group cursor-pointer">
-              <BiRepost className="w-6 h-6  text-slate-500 group-hover:text-green-500" />
+              <BiRepost className="w-6 h-6 text-slate-500 group-hover:text-green-500" />
               <span className="text-sm text-slate-500 group-hover:text-green-500">
                 0
               </span>
@@ -172,14 +178,14 @@ export const Post: React.FC<
                 <FaRegHeart className="w-4 h-4 cursor-pointer text-slate-500 group-hover:text-pink-500" />
               )}
               {isLiked && (
-                <FaRegHeart className="w-4 h-4 cursor-pointer fill-pink-500 " />
+                <FaRegHeart className="w-4 h-4 cursor-pointer fill-pink-500" />
               )}
               <span
                 className={`text-sm group-hover:text-pink-500 ${
                   isLiked ? "text-pink-500" : "text-slate-500"
                 }`}
               >
-                {post.likes.length}
+                {post.likes?.length || 0}
               </span>
             </div>
           </div>

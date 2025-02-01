@@ -14,14 +14,17 @@ const initialState: AuthState = {
     isError: false,
 };
 
-export const fetchUser = createAsyncThunk("auth/fetchUser", async (_, { rejectWithValue }) => {
-    try {
-        const response = await axios.get("/api/auth/me");
-        return response.data;
-    } catch (error) {
-        return rejectWithValue("No authenticated user found");
-    };
-});
+export const fetchUser = createAsyncThunk(
+    "auth/fetchUser",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await axios.get("/api/auth/me");
+            return response.data; // Suponiendo que devuelve el usuario autenticado
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.error || "No authenticated user found");
+        }
+    }
+)
 
 export const login = createAsyncThunk(
     "auth/login",
@@ -54,23 +57,27 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchUser.pending, (state: { isLoading: boolean; }) => {
-                state.isLoading = true;
-            })
-            .addCase(fetchUser.fulfilled, (state, action: PayloadAction<User>) => {
-                state.user = action.payload;
-                state.isLoading = false;
-            })
-            .addCase(fetchUser.rejected, (state) => {
-                state.isLoading = false;
-                state.isError = true;
-            })
-            .addCase(login.fulfilled, (state, action: PayloadAction<User>) => {
-                state.user = action.payload;
-            })
-            .addCase(logout.fulfilled, (state) => {
-                state.user = null;
-            });
+        .addCase(fetchUser.pending, (state) => {
+            state.isLoading = true;  // Asegúrate de que esté marcando la carga cuando empieza
+            state.isError = false;
+        })
+        .addCase(fetchUser.fulfilled, (state, action: PayloadAction<User>) => {
+            state.user = action.payload;
+            state.isLoading = false;  // Marcar como terminado cuando la petición sea exitosa
+            state.isError = false;
+        })
+        .addCase(fetchUser.rejected, (state) => {
+            state.isLoading = false;  // Asegúrate de marcar como terminado incluso si hay un error
+            state.isError = true;
+        })
+        .addCase(login.fulfilled, (state, action: PayloadAction<User>) => {
+            state.user = action.payload;
+        })
+        .addCase(logout.fulfilled, (state) => {
+            state.user = null;
+            state.isLoading = false;  // Asegúrate de que no se quede en estado de carga después del logout
+            state.isError = false;    // Restablecer isError
+        });
     },
 });
 
