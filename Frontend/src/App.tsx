@@ -12,7 +12,7 @@ import { useAuth } from "./hooks/useAuth";
 import { LoadingSpinner } from "./components/common/LoadingSpinner";
 
 export const App = () => {
-  const { user, isLoading, isError, fetchUser } = useAuth();
+  const { user, isLoading, fetchUser } = useAuth();
 
   useEffect(() => {
     fetchUser();
@@ -22,14 +22,6 @@ export const App = () => {
     return (
       <div className="h-screen flex justify-center items-center">
         <LoadingSpinner className="w-6 h-6" />
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="h-screen flex justify-center items-center">
-        <p>Error loading user. Please refresh.</p>
       </div>
     );
   }
