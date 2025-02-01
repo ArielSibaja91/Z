@@ -5,9 +5,7 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { usePost } from "../../hooks/usePost";
 import { User } from "../../types/postProps";
-{
-  /* import { Posts } from "../../components/common/Posts"; */
-}
+import { Posts } from "../../components/common/Posts";
 import { ProfileHeaderSkeleton } from "../../components/skeletons/ProfileHeaderSkeleton";
 import { EditProfileModal } from "./EditProfileModal";
 import { FaArrowLeft } from "react-icons/fa6";
@@ -20,7 +18,7 @@ export const ProfilePage = () => {
   const { getUser, isLoading: isUserLoading } = useUser();
   const { user: authUser } = useAuth();
   const [feedType, setFeedType] = useState<string>("posts");
-  const { posts } = usePost(feedType);
+  const { posts, isLoading } = usePost(feedType, authUser);
   const [user, setUser] = useState<User | null>(null);
   const [isMyProfile, setIsMyProfile] = useState<boolean>(false);
   const [coverImg, setCoverImg] = useState<string | null>(null);
@@ -223,7 +221,7 @@ export const ProfilePage = () => {
             </div>
           </>
         )}
-        {/*<Posts posts={posts} isLoading={isLoading} deletePost={deletePost} likePost={likePost} commentPost={commentPost} />*/}
+        <Posts posts={posts} isLoading={isLoading} />
       </div>
     </main>
   );
