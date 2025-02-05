@@ -5,13 +5,11 @@ import { User } from "../../types/postProps";
 interface AuthState {
     user: User | null;
     isLoading: boolean;
-    isError: boolean;
 };
 
 const initialState: AuthState = {
     user: null,
     isLoading: false,
-    isError: false,
 };
 
 export const fetchUser = createAsyncThunk(
@@ -19,7 +17,7 @@ export const fetchUser = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const response = await axios.get("/api/auth/me");
-            return response.data; // Suponiendo que devuelve el usuario autenticado
+            return response.data;
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.error || "No authenticated user found");
         }
@@ -58,25 +56,21 @@ const authSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(fetchUser.pending, (state) => {
-            state.isLoading = true;  // Asegúrate de que esté marcando la carga cuando empieza
-            state.isError = false;
+            state.isLoading = true;
         })
         .addCase(fetchUser.fulfilled, (state, action: PayloadAction<User>) => {
             state.user = action.payload;
-            state.isLoading = false;  // Marcar como terminado cuando la petición sea exitosa
-            state.isError = false;
+            state.isLoading = false;
         })
         .addCase(fetchUser.rejected, (state) => {
-            state.isLoading = false;  // Asegúrate de marcar como terminado incluso si hay un error
-            state.isError = true;
+            state.isLoading = false;
         })
         .addCase(login.fulfilled, (state, action: PayloadAction<User>) => {
             state.user = action.payload;
         })
         .addCase(logout.fulfilled, (state) => {
             state.user = null;
-            state.isLoading = false;  // Asegúrate de que no se quede en estado de carga después del logout
-            state.isError = false;    // Restablecer isError
+            state.isLoading = false;
         });
     },
 });
