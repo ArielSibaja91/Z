@@ -1,56 +1,73 @@
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../store/store";
-import { login, logout, fetchUser } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
+import {
+    useMeQuery,
+    useLoginMutation,
+    useSignupMutation,
+    useLogoutMutation,
+} from "../features/auth/authApi";
+import { setUser } from "../features/auth/authSlice"; // Imports setUser action
+import React from "react";
 
 export const useAuth = () => {
     const authState = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
+    const { data: user, isLoading, isError, refetch } = useMeQuery();
+
+    const [loginApi, { isLoading: isLoginLoading }] = useLoginMutation();
+    const [signupApi, { isLoading: isSignupLoading }] = useSignupMutation();
+    const [logoutApi, { isLoading: isLogoutLoading }] = useLogoutMutation();
+
+    React.useEffect(() => {
+        if (user) {
+            dispatch(setUser(user));
+        }
+    }, [user, dispatch]);
+
     const signup = async (userData: { email?: string; username?: string; fullName?: string; password?: string }) => {
         try {
-            const response = await axios.post("/api/auth/signup", userData);
-            dispatch(login(response.data));
+            const result = await signupApi(userData).unwrap();
+            dispatch(setUser(result));
             toast.success("Account created successfully");
-            navigate(`/profile/${response.data.username}`);
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                const errorMessage = error.response?.data?.error || "Something went wrong";
-                toast.error(errorMessage);
-            } else {
-                toast.error("An unexpected error occurred.");
-            }
+            navigate(`/profile/${result.username}`);
+        } catch (error: any) {
+            toast.error(error?.data?.error || "Something went wrong during signup");
         }
     };
 
     const handleLogin = async (userData: { username?: string; password?: string }) => {
-        const result = await dispatch(login(userData));
-        if (login.fulfilled.match(result)) {
+        try {
+            const result = await loginApi(userData).unwrap();
+            dispatch(setUser(result));
             toast.success("Logged in successfully");
-            navigate(`/profile/${result.payload.username}`);
-        } else if (login.rejected.match(result)) {
-            toast.error(String(result.payload || "Login failed"));
+            navigate(`/profile/${result.username}`);
+        } catch (error: any) {
+            toast.error(error?.data?.error || "Login failed");
         }
     };
 
     const handleLogout = async () => {
-        const result = await dispatch(logout());
-        if (logout.fulfilled.match(result)) {
+        try {
+            await logoutApi().unwrap();
+            dispatch(setUser(null));
             toast.success("Logged out successfully");
             navigate("/signup");
-        } else if (logout.rejected.match(result)) {
-            toast.error(String(result.payload || "Logout failed"));
+        } catch (error: any) {
+            toast.error(error?.data?.error || "Logout failed");
         }
     };
 
     return {
-        ...authState,
+        user: authState.user,
+        isLoading: isLoading || isLoginLoading || isSignupLoading || isLogoutLoading,
+        isError,
         login: handleLogin,
         logout: handleLogout,
-        fetchUser: () => dispatch(fetchUser()),
+        fetchUser: refetch,
         signup,
     };
 };

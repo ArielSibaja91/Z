@@ -17,8 +17,10 @@ export const usePost = (feedType?: string, authUser?: User | null) => {
     }, [dispatch, feedType, authUser]);
 
     useEffect(() => {
-        getPostsEndpoint();
-    }, [getPostsEndpoint]);
+        if(authUser){
+            getPostsEndpoint();
+        }
+    }, [getPostsEndpoint, authUser]);
 
     // 📤 Funciones que disparan acciones de Redux con toasts
 

@@ -1,15 +1,10 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
 import type { RootState, AppDispatch } from "../store/store";
 import { fetchSuggestedUsers, followUnfollowUser, getUserProfile } from "../features/user/userSlice";
 
 export const useUser = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { isLoading, suggestedUsers, error } = useSelector((state: RootState) => state.user);
-
-    useEffect(() => {
-        dispatch(fetchSuggestedUsers());
-    }, [dispatch]);
+    const { isLoading, suggestedUsers } = useSelector((state: RootState) => state.user);
 
     const followUnfollowUserHandler = (userId: string, isFollowing: boolean) => {
         dispatch(followUnfollowUser({ userId, isFollowing }));
@@ -23,7 +18,7 @@ export const useUser = () => {
     return {
         isLoading,
         suggestedUsers,
-        error,
+        fetchSuggestedUsers: () => dispatch(fetchSuggestedUsers()),
         followUnfollowUser: followUnfollowUserHandler,
         getUser,
     };

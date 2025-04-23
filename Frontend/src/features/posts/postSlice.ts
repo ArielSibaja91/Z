@@ -21,8 +21,11 @@ const initialState: PostsState = {
 export const fetchPosts = createAsyncThunk(
     'posts/fetchPosts',
     async ({ feedType, authUser }: { feedType?: string; authUser?: User | null }) => {
-        let endpoint = 'api/posts/all';
+        let endpoint = '';
         switch (feedType) {
+            case 'forYou':
+                endpoint = 'api/posts/all';
+                break;
             case 'following':
                 endpoint = 'api/posts/following';
                 break;

@@ -16,7 +16,11 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
 
   if (isLoading) {
-    return <LoadingSpinner className="w-6 h-6" />;
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <LoadingSpinner className="w-6 h-6" />
+      </div>
+    );
   };
 
   if (!user) {
@@ -31,22 +35,34 @@ const AuthRoute = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
 
   if (isLoading) {
-    return <LoadingSpinner className="w-6 h-6" />;
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <LoadingSpinner className="w-6 h-6" />
+      </div>
+    );
   };
-  
+
   if (user) {
     return <Navigate to={location?.state?.from || "/"} replace />;
   };
-  
+
   return children;
 };
 
 export const App = () => {
-  const { user, fetchUser } = useAuth();
+  const { user, isLoading, fetchUser } = useAuth();
 
   useEffect(() => {
     fetchUser();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <LoadingSpinner className="w-6 h-6" />
+      </div>
+    );
+  };
 
   return (
     <div className="flex max-w-6xl mx-auto">

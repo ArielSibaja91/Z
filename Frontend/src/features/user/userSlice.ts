@@ -5,13 +5,13 @@ import { User } from "../../types/postProps";
 interface UserState {
     isLoading: boolean;
     suggestedUsers: User[] | null;
-    error: string | null;
+    user : User | null;
 }
 
 const initialState: UserState = {
     isLoading: false,
     suggestedUsers: null,
-    error: null,
+    user: null,
 };
 
 export const fetchSuggestedUsers = createAsyncThunk(
@@ -58,15 +58,13 @@ const userSlice = createSlice({
         builder
             .addCase(fetchSuggestedUsers.pending, (state) => {
                 state.isLoading = true;
-                state.error = null;
             })
             .addCase(fetchSuggestedUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
                 state.isLoading = false;
                 state.suggestedUsers = action.payload;
             })
-            .addCase(fetchSuggestedUsers.rejected, (state, action) => {
+            .addCase(fetchSuggestedUsers.rejected, (state) => {
                 state.isLoading = false;
-                state.error = action.payload as string;
             })
             .addCase(followUnfollowUser.fulfilled, (state, action) => {
                 if (state.suggestedUsers) {
@@ -79,14 +77,13 @@ const userSlice = createSlice({
             })
             .addCase(getUserProfile.pending, (state) => {
                 state.isLoading = true;
-                state.error = null;
             })
-            .addCase(getUserProfile.fulfilled, (state) => {
+            .addCase(getUserProfile.fulfilled, (state, action: PayloadAction<User>) => {
+                state.user = action.payload;
                 state.isLoading = false;
             })
-            .addCase(getUserProfile.rejected, (state, action) => {
+            .addCase(getUserProfile.rejected, (state) => {
                 state.isLoading = false;
-                state.error = action.payload as string;
             });
     },
 });
