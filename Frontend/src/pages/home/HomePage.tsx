@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuthCheckQuery } from "../../features/auth/authApi";
 import { CreatePost } from "./CreatePost";
 import { Posts } from "../../components/common/Posts";
 import { usePost } from "../../hooks/usePost";
 
 export const HomePage = () => {
-  const { user } = useAuth();
+  const { data: user } = useAuthCheckQuery();
   const [feedType, setFeedType] = useState<string>("forYou");
   const { posts, isLoading, addPostAction } = usePost(feedType, user);
 

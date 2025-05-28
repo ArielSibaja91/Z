@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useUser } from "../../hooks/useUser";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuthCheckQuery } from "../../features/auth/authApi";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { usePost } from "../../hooks/usePost";
@@ -16,7 +16,7 @@ import { MdEdit } from "react-icons/md";
 export const ProfilePage = () => {
   const { username } = useParams<{ username: string }>();
   const { getUser, isLoading: isUserLoading } = useUser();
-  const { user: authUser } = useAuth();
+  const { data: authUser } = useAuthCheckQuery();
   const [feedType, setFeedType] = useState<string>("posts");
   const { posts, isLoading } = usePost(feedType, authUser);
   const [user, setUser] = useState<User | null>(null);

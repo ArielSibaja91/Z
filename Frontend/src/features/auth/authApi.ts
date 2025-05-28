@@ -3,37 +3,34 @@ import { User } from '../../types/postProps';
 
 export const authApi = createApi({
     reducerPath: 'authApi',
-    baseQuery: fetchBaseQuery({ baseUrl: '/api/auth' }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: '/api/auth',
+    }),
     endpoints: (builder) => ({
-        me: builder.query<User, void>({
-            query: () => "/me",
-        }),
-        login: builder.mutation<User, { username?: string; password?: string }>({
+        signup: builder.mutation<User, { fullName: string; username: string; email: string; password: string }>({
             query: (credentials) => ({
-                url: "/login",
-                method: "POST",
+                url: '/signup',
+                method: 'POST',
                 body: credentials,
             }),
         }),
-        signup: builder.mutation<User, { email?: string; username?: string; fullName?: string; password?: string }>({
-            query: (userData) => ({
-                url: "/signup",
-                method: "POST",
-                body: userData,
+        login: builder.mutation<User, { username: string; password: string }>({
+            query: (credentials) => ({
+                url: '/login',
+                method: 'POST',
+                body: credentials,
             }),
         }),
-        logout: builder.mutation<void, void>({
+        logout: builder.mutation<{ message: string }, void>({
             query: () => ({
-                url: "/logout",
-                method: "POST",
+                url: '/logout',
+                method: 'POST',
             }),
+        }),
+        authCheck: builder.query<User, void>({
+            query: () => '/me',
         }),
     }),
 });
 
-export const {
-    useMeQuery,
-    useLoginMutation,
-    useSignupMutation,
-    useLogoutMutation,
-} = authApi;
+export const { useSignupMutation, useLoginMutation, useLogoutMutation, useAuthCheckQuery } = authApi;

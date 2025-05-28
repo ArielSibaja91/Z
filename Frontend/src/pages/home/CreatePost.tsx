@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuthCheckQuery } from "../../features/auth/authApi";
 import { CiImageOn } from "react-icons/ci";
 import { BsEmojiSmileFill } from "react-icons/bs";
 import { IoCloseSharp } from "react-icons/io5";
@@ -9,7 +9,7 @@ type CreatePostProps = {
 };
 
 export const CreatePost: React.FC<CreatePostProps> = ({ addPost }) => {
-  const { user } = useAuth();
+  const { data: user } = useAuthCheckQuery();
   const [text, setText] = useState<string>("");
   const [img, setImg] = useState<string | null>(null);
   const isLoading: boolean = false;
