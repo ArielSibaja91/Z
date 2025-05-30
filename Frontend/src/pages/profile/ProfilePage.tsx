@@ -1,10 +1,9 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { useUser } from "../../hooks/useUser";
+import { ChangeEvent, useRef, useState } from "react";
+import { useGetUserProfileQuery, useFollowUnfollowUserMutation, useUpdateUserProfileMutation } from "../../features/user/userApi";
 import { useAuthCheckQuery } from "../../features/auth/authApi";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { usePost } from "../../hooks/usePost";
-import { User } from "../../types/postProps";
 import { Posts } from "../../components/common/Posts";
 import { ProfileHeaderSkeleton } from "../../components/skeletons/ProfileHeaderSkeleton";
 import { EditProfileModal } from "./EditProfileModal";
@@ -12,35 +11,27 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
+import toast from "react-hot-toast";
 
 export const ProfilePage = () => {
   const { username } = useParams<{ username: string }>();
-  const { getUser, isLoading: isUserLoading } = useUser();
+  const { data: user, isLoading: isUserLoading, refetch: refetchUserProfile } = useGetUserProfileQuery(username || '', {
+    skip: !username,
+  });
   const { data: authUser } = useAuthCheckQuery();
   const [feedType, setFeedType] = useState<string>("posts");
-  const { posts, isLoading } = usePost(feedType, authUser);
-  const [user, setUser] = useState<User | null>(null);
-  const [isMyProfile, setIsMyProfile] = useState<boolean>(false);
+  const { posts, isLoading } = usePost(feedType, user);
   const [coverImg, setCoverImg] = useState<string | null>(null);
   const [profileImg, setProfileImg] = useState<string | null>(null);
 
   const coverImgRef = useRef<HTMLInputElement | null>(null);
   const profileImgRef = useRef<HTMLInputElement | null>(null);
 
-  const currentUser = authUser?.username;
+  const [followUnfollowUser, { isLoading: isFollowingOrUnfollowing }] = useFollowUnfollowUserMutation();
+  const [updateUserProfile, { isLoading: isUpdatingProfile }] = useUpdateUserProfileMutation();
 
-  useEffect(() => {
-    const fetchAndCheckUser = async () => {
-      if (username) {
-        const fetchedUser = await getUser(username);
-        setUser(fetchedUser);
-        if (fetchedUser?.username === currentUser) {
-          setIsMyProfile(true);
-        }
-      }
-    };
-    fetchAndCheckUser();
-  }, [username]);
+  const isMyProfile = user?.username === authUser?.username;
+  const isCurrentlyFollowing = authUser?._id ? user?.followers?.includes(authUser._id) : false;
 
   const handleImgChange = (
     e: ChangeEvent<HTMLInputElement>,
@@ -62,9 +53,46 @@ export const ProfilePage = () => {
     }
   };
 
+    const handleFollowUnfollow = async () => {
+    if (!user || !authUser) return;
+    try {
+      await followUnfollowUser({ userId: user._id as string }).unwrap();
+    } catch (err) {
+      console.error("Error al seguir/dejar de seguir:", err);
+    }
+  };
+
+  const handleUpdateProfile = async () => {
+    if (!user) return;
+    try {
+      const updateData: {
+        fullName?: string;
+        email?: string;
+        username?: string;
+        bio?: string;
+        link?: string;
+        profileImg?: string;
+        coverImg?: string;
+      } = {};
+
+      // Convert updateData to FormData
+      const formData = new FormData();
+      Object.entries(updateData).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, value);
+        }
+      });
+
+      await updateUserProfile(formData).unwrap();
+      toast.success("Perfil actualizado exitosamente!");
+      refetchUserProfile();
+    } catch (err) {
+      console.error("Error al actualizar el perfil:", err);
+    }
+  };
+
   return (
     <main className="flex-[4_4_0] border-r border-white/20 min-h-screen">
-      {/* HEADER */}
       {isUserLoading && <ProfileHeaderSkeleton />}
       {!isUserLoading && !user && (
         <p className="text-center text-lg mt-4">User not found</p>
@@ -83,7 +111,6 @@ export const ProfilePage = () => {
                 </span>
               </div>
             </div>
-            {/* COVER IMG */}
             <div className="relative group/cover">
               <img
                 src={coverImg || user?.coverImg || "/vite.svg"}
@@ -112,7 +139,6 @@ export const ProfilePage = () => {
                 ref={profileImgRef}
                 onChange={(e) => handleImgChange(e, "profileImg")}
               />
-              {/* USER AVATAR */}
               <div className="absolute -bottom-16 left-4">
                 <div className="w-32 relative group/avatar">
                   <img
@@ -139,17 +165,19 @@ export const ProfilePage = () => {
               {!isMyProfile && (
                 <button
                   className="bg-black text-white hover:bg-white hover:text-black outline outline-1 outline-white/35 px-4 py-1.5 rounded-full duration-150"
-                  onClick={() => alert("Followed successfully")}
+                  onClick={handleFollowUnfollow}
+                  disabled={isFollowingOrUnfollowing}
                 >
-                  Follow
+                  {isFollowingOrUnfollowing ? (isCurrentlyFollowing ? "Unfollowing..." : "Following...") : (isCurrentlyFollowing ? "Unfollow" : "Follow")}
                 </button>
               )}
-              {(coverImg || profileImg) && (
+              {(coverImg || profileImg) && isMyProfile && (
                 <button
                   className="bg-primary rounded-full text-white px-4 ml-2 hover:brightness-[.85] duration-200"
-                  onClick={() => alert("Profile updated successfully")}
+                  onClick={handleUpdateProfile}
+                  disabled={isUpdatingProfile}
                 >
-                  Update
+                  {isUpdatingProfile ? "Updating..." : "Update"}
                 </button>
               )}
             </div>
