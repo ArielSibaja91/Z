@@ -29,6 +29,7 @@ export const SignUpPage = () => {
       toast.success("Signup successful! Welcome to Z.");
       navigate("/");
     } catch (error) {
+      toast.error("Signup failed. Please check your credentials.");
       console.error("Error en el registro:", error);
     }
   };
