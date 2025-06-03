@@ -41,14 +41,13 @@ export const usePost = (feedType?: string, profileUser?: User | null) => {
             toast.success('Post deleted successfully');
             refetchUserPostsCount(); // Refetch user posts count after deleting a post
         } catch (error) {
-            toast.error('Failed to delete post');
+            console.error('Failed to delete post:', error);
         }
     };
 
     const handleLikePost = async (postId: string) => {
         try {
             await likePostAction(postId).unwrap();
-            toast.success('Post liked successfully');
         } catch (error) {
             toast.error('Failed to like the post');
         }
