@@ -1,12 +1,54 @@
 import { Link } from "react-router-dom";
 import { RightPanelSkeleton } from "../skeletons/RightPanelSkeleton";
-import { useUser } from "../../hooks/useUser";
+import { useGetSuggestedUsersQuery, useFollowUnfollowUserMutation } from "../../features/user/userApi";
 import toast from "react-hot-toast";
 
 export const RightPanel = () => {
-  const { suggestedUsers, followUnfollowUser, isLoading } = useUser();
-  // Just in case that they are not any suggested users
-  if(suggestedUsers?.length === 0) return <div className="md:w-64 w-0"></div>
+  const { data: suggestedUsers, isLoading, isError, error } = useGetSuggestedUsersQuery();
+  const [followUnfollowUser, { isLoading: isMutatingFollow }] = useFollowUnfollowUserMutation();
+
+  if (isError) {
+    console.error("Error fetching suggested users:", error);
+      <div className="md:w-64 w-0">Error fetching suggestions.</div>;
+  }
+
+  if (!isLoading && (!suggestedUsers || suggestedUsers.length === 0)) {
+    return <div className="md:w-64 w-0"></div>;
+  
+  }
+
+    if (isLoading) {
+    return (
+      <aside className="hidden lg:block my-4 mx-2">
+        <div className="bg-[#16181C] p-4 rounded-md sticky top-2">
+          <p className="font-bold">Who to follow</p>
+          <div className="flex flex-col gap-4">
+            <>
+              <RightPanelSkeleton />
+              <RightPanelSkeleton />
+              <RightPanelSkeleton />
+              <RightPanelSkeleton />
+            </>
+          </div>
+        </div>
+      </aside>
+    );
+  }
+
+  if (!suggestedUsers || suggestedUsers.length === 0) {
+    return <div className="md:w-64 w-0"></div>;
+  }
+
+  const handleFollowUnfollow = async (userId: string, isFollowing: boolean) => {
+    try {
+      await followUnfollowUser({ userId }).unwrap();
+      toast.success(isFollowing ? "User unfollowed" : "User followed");
+    } catch (err: any) {
+      console.error("Follow/Unfollow error", err);
+      toast.error(err.data?.error || "Something went wrong.");
+    }
+  };
+
   return (
     <aside className="hidden lg:block my-4 mx-2">
       <div className="bg-[#16181C] p-4 rounded-md sticky top-2">
@@ -44,21 +86,16 @@ export const RightPanel = () => {
                   </div>
                 </div>
                 <div>
-                  <button
-                    className="bg-white px-3 py-1 text-black hover:bg-white hover:opacity-90 rounded-full"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (user.isFollowing) {
-                        followUnfollowUser(user._id!, true);
-                        toast.success("User unfollowed");
-                      } else {
-                        followUnfollowUser(user._id!, false);
-                        toast.success("User followed");
-                      }
-                    }}
-                  >
-                    {user.isFollowing ? "Unfollow" : "Follow"}
-                  </button>
+                <button
+                  className="bg-white px-3 py-1 text-black hover:bg-white hover:opacity-90 rounded-full"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleFollowUnfollow(user._id!, (user.isFollowing || false));
+                  }}
+                  disabled={isMutatingFollow}
+                >
+                  {isMutatingFollow ? "..." : (user.isFollowing ? "Unfollow" : "Follow")}
+                </button>
                 </div>
               </Link>
             ))}

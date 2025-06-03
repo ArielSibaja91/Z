@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import { SignUpPage } from "./pages/auth/signup/SignUpPage";
 import { LoginPage } from "./pages/auth/login/LoginPage";
@@ -8,49 +7,60 @@ import { SideBar } from "./components/common/SideBar";
 import { RightPanel } from "./components/common/RightPanel";
 import { ProfilePage } from "./pages/profile/ProfilePage";
 import { Toaster } from "react-hot-toast";
-import { useAuth } from "./hooks/useAuth";
 import { LoadingSpinner } from "./components/common/LoadingSpinner";
+import { useAuthCheckQuery } from "./features/auth/authApi";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { user, isLoading } = useAuth();
-  const location = useLocation();
+  const { data: user, isLoading, isError } = useAuthCheckQuery();
 
   if (isLoading) {
-    return <LoadingSpinner className="w-6 h-6" />;
-  };
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <LoadingSpinner className="w-6 h-6" />
+      </div>
+    );
+  }
 
-  if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  };
+  if (isError || !user) {
+    return <Navigate to="/login" replace />;
+  }
 
   return children;
 };
 
 const AuthRoute = ({ children }: { children: JSX.Element }) => {
-  const { user, isLoading } = useAuth();
+  const { data: user, isLoading, isSuccess } = useAuthCheckQuery();
   const location = useLocation();
 
   if (isLoading) {
-    return <LoadingSpinner className="w-6 h-6" />;
-  };
-  
-  if (user) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <LoadingSpinner className="w-6 h-6" />
+      </div>
+    );
+  }
+
+  if (isSuccess && user) {
     return <Navigate to={location?.state?.from || "/"} replace />;
-  };
-  
+  }
+
   return children;
 };
 
 export const App = () => {
-  const { user, fetchUser } = useAuth();
+  const { data: user, isLoading, isSuccess } = useAuthCheckQuery();
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
+  if (isLoading) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <LoadingSpinner className="w-6 h-6" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex max-w-6xl mx-auto">
-      {user && <SideBar />}
+      {isSuccess && user && <SideBar />}
       <Routes>
         <Route
           path="/"
@@ -93,7 +103,7 @@ export const App = () => {
           }
         />
       </Routes>
-      {user && <RightPanel />}
+      {isSuccess && user && <RightPanel />}
       <Toaster />
     </div>
   );

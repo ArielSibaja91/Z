@@ -11,7 +11,7 @@ type PostsProps = {
 export const Posts: React.FC<PostsProps> = ({ posts, isLoading }) => {
   const { deletePostAction, likePostAction, commentPostAction } = usePost();
   if (!Array.isArray(posts) || posts.length === 0) {
-    return <p>No posts available.</p>;
+    return <PostSkeleton />;
   };
   return (
     <>

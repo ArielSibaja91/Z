@@ -1,66 +1,68 @@
-import { useEffect, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "../store/store";
-import { User } from "../types/postProps";
-import toast from "react-hot-toast";
-import { fetchPosts, addPost, deletePost, likePost, commentPost } from "../features/posts/postSlice";
+import { User } from '../types/postProps';
+import toast from 'react-hot-toast';
+import {
+    useFetchPostsQuery,
+    useAddPostMutation,
+    useDeletePostMutation,
+    useLikePostMutation,
+    useCommentPostMutation,
+} from '../features/posts/postApi';
 
 export const usePost = (feedType?: string, authUser?: User | null) => {
-    const dispatch = useDispatch<AppDispatch>();
+    const {
+        data: posts,
+        isLoading,
+        refetch: getPostsEndpoint,
+    } = useFetchPostsQuery({ feedType, authUser }, { skip: !authUser });
 
-    // Seleccionar el estado desde Redux
-    const { posts, isLoading } = useSelector((state: RootState) => state.posts);
+    const [addPostAction] = useAddPostMutation();
+    const [deletePostAction] = useDeletePostMutation();
+    const [likePostAction] = useLikePostMutation();
+    const [commentPostAction] = useCommentPostMutation();
 
-    // 📥 Obtener posts al montar el componente
-    const getPostsEndpoint = useCallback(() => {
-        dispatch(fetchPosts({ feedType, authUser }));
-    }, [dispatch, feedType, authUser]);
-
-    useEffect(() => {
-        getPostsEndpoint();
-    }, [getPostsEndpoint]);
-
-    // 📤 Funciones que disparan acciones de Redux con toasts
-
-    const addPostAction = async (postData: { text: string; img: string | null }) => {
+    const handleAddPost = async (postData: { text: string; img: string | null }) => {
         try {
-            await dispatch(addPost(postData)).unwrap();
+            await addPostAction(postData).unwrap();
             toast.success('Post created successfully');
         } catch (error) {
             toast.error('Failed to add post');
         }
     };
 
-    const deletePostAction = async (postId: string) => {
+    const handleDeletePost = async (postId: string) => {
         try {
-            await dispatch(deletePost(postId)).unwrap();
+            await deletePostAction(postId).unwrap();
             toast.success('Post deleted successfully');
         } catch (error) {
             toast.error('Failed to delete post');
         }
     };
 
-    const likePostAction = async (postId: string) => {
+    const handleLikePost = async (postId: string) => {
         try {
-            if (authUser?._id) {
-                await dispatch(likePost({ postId, userId: authUser._id })).unwrap();
-                toast.success('Post liked successfully');
-            }
+            await likePostAction(postId).unwrap();
+            toast.success('Post liked successfully');
         } catch (error) {
             toast.error('Failed to like the post');
         }
     };
 
-    const commentPostAction = async (postId: string, text: string) => {
+    const handleCommentPost = async (postId: string, text: string) => {
         try {
-            if (authUser) {
-                await dispatch(commentPost({ postId, text, authUser })).unwrap();
-                toast.success('Comment added successfully');
-            }
+            await commentPostAction({ postId, text }).unwrap();
+            toast.success('Comment added successfully');
         } catch (error) {
             toast.error('Failed to add comment');
         }
     };
 
-    return { posts, isLoading, addPostAction, deletePostAction, likePostAction, commentPostAction };
+    return {
+        posts,
+        isLoading,
+        addPostAction: handleAddPost,
+        deletePostAction: handleDeletePost,
+        likePostAction: handleLikePost,
+        commentPostAction: handleCommentPost,
+        refetchPosts: getPostsEndpoint,
+    };
 };

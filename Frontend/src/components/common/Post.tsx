@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { useModal } from "../../hooks/useModal";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuthCheckQuery } from "../../features/auth/authApi";
 import { Link } from "react-router-dom";
 import { FaRegComment, FaTrash, FaRegHeart } from "react-icons/fa";
 import { BiRepost } from "react-icons/bi";
@@ -21,7 +21,7 @@ export const Post: React.FC<
   if (!post) return null;
 
   const { modalRef, backdropRef, openModal, closeModal } = useModal();
-  const { user: authUser } = useAuth();
+  const { data: authUser } = useAuthCheckQuery();
   const [comment, setComment] = useState<string>("");
 
   const postOwner = post.user;
