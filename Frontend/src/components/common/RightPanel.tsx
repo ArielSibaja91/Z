@@ -9,7 +9,7 @@ export const RightPanel = () => {
 
   if (isError) {
     console.error("Error fetching suggested users:", error);
-      <div className="md:w-64 w-0">Error al cargar sugerencias.</div>;
+      <div className="md:w-64 w-0">Error fetching suggestions.</div>;
   }
 
   if (!isLoading && (!suggestedUsers || suggestedUsers.length === 0)) {
@@ -41,11 +41,11 @@ export const RightPanel = () => {
 
   const handleFollowUnfollow = async (userId: string, isFollowing: boolean) => {
     try {
-      await followUnfollowUser({ userId }).unwrap(); // .unwrap() para manejar errores
-      toast.success(isFollowing ? "Usuario dejado de seguir" : "Usuario seguido");
+      await followUnfollowUser({ userId }).unwrap();
+      toast.success(isFollowing ? "User unfollowed" : "User followed");
     } catch (err: any) {
-      console.error("Error al seguir/dejar de seguir:", err);
-      toast.error(err.data?.error || "Algo salió mal.");
+      console.error("Follow/Unfollow error", err);
+      toast.error(err.data?.error || "Something went wrong.");
     }
   };
 

@@ -52,7 +52,7 @@ export const postApi = createApi({
                 url: `/posts/${postId}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (id) => [{ type: 'Posts', id }],
+            invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
         }),
         likePost: builder.mutation<void, string>({
             query: (postId) => ({
@@ -60,9 +60,9 @@ export const postApi = createApi({
                 method: 'POST',
             }),
             async onQueryStarted(postId, { dispatch, queryFulfilled, getState }) {
-                const userId = ((getState() as unknown) as RootState).auth.user?._id;
+                const authUser = (getState() as RootState).authApi.queries['authCheck(undefined)']?.data as User | undefined;
+                const userId = authUser?._id;
                 if (!userId) return;
-
                 const patchResult = dispatch(
                     postApi.util.updateQueryData('fetchPosts', {}, (draft) => {
                         draft.forEach((post) => {
@@ -92,15 +92,13 @@ export const postApi = createApi({
                 body: { text },
             }),
             async onQueryStarted({ postId, text }, { dispatch, queryFulfilled, getState }) {
-                const authUser = ((getState() as unknown) as RootState).auth.user;
+                const authUser = (getState() as RootState).authApi.queries['authCheck(undefined)']?.data as User | undefined;
                 if (!authUser) return;
-
                 const newComment: Comment = {
                     _id: Date.now().toString(),
                     user: authUser,
                     text,
                 };
-
                 const patchResult = dispatch(
                     postApi.util.updateQueryData('fetchPosts', {}, (draft) => {
                         const post = draft.find((p) => p._id === postId);

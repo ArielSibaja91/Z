@@ -9,22 +9,16 @@ import {
 } from '../features/posts/postApi';
 
 export const usePost = (feedType?: string, authUser?: User | null) => {
-    // Usamos el hook generado por RTK Query para obtener los datos y el estado
     const {
         data: posts,
         isLoading,
-        refetch: getPostsEndpoint, // Renombramos refetch para que coincida con la lógica anterior
-    } = useFetchPostsQuery({ feedType, authUser }, { skip: !authUser }); // Skip la query si no hay usuario autenticado
+        refetch: getPostsEndpoint,
+    } = useFetchPostsQuery({ feedType, authUser }, { skip: !authUser });
 
-    // Usamos los hooks de mutación generados por RTK Query
     const [addPostAction] = useAddPostMutation();
     const [deletePostAction] = useDeletePostMutation();
     const [likePostAction] = useLikePostMutation();
     const [commentPostAction] = useCommentPostMutation();
-
-    // Ya no necesitamos un useEffect separado para la carga inicial,
-    // useFetchPostsQuery lo maneja automáticamente.
-    // Sin embargo, si necesitas un comportamiento adicional al montar el componente, puedes usar useEffect.
 
     const handleAddPost = async (postData: { text: string; img: string | null }) => {
         try {
@@ -65,10 +59,10 @@ export const usePost = (feedType?: string, authUser?: User | null) => {
     return {
         posts,
         isLoading,
-        addPostAction: handleAddPost, // Usamos las funciones envueltas con toast
+        addPostAction: handleAddPost,
         deletePostAction: handleDeletePost,
         likePostAction: handleLikePost,
         commentPostAction: handleCommentPost,
-        refetchPosts: getPostsEndpoint, // Expón la función refetch si la necesitas manualmente
+        refetchPosts: getPostsEndpoint,
     };
 };
