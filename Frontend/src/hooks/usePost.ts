@@ -8,12 +8,17 @@ import {
     useCommentPostMutation,
 } from '../features/posts/postApi';
 
-export const usePost = (feedType?: string, authUser?: User | null) => {
+export const usePost = (feedType?: string, profileUser?: User | null) => {
     const {
         data: posts,
         isLoading,
         refetch: getPostsEndpoint,
-    } = useFetchPostsQuery({ feedType, authUser }, { skip: !authUser });
+    } = useFetchPostsQuery({ feedType, profileUser }, { skip: !profileUser });
+
+    const {
+        data: userPostsCountData,
+        refetch: refetchUserPostsCount,
+    } = useFetchPostsQuery({ feedType: 'posts', profileUser }, { skip: !profileUser });
 
     const [addPostAction] = useAddPostMutation();
     const [deletePostAction] = useDeletePostMutation();
@@ -24,6 +29,7 @@ export const usePost = (feedType?: string, authUser?: User | null) => {
         try {
             await addPostAction(postData).unwrap();
             toast.success('Post created successfully');
+            refetchUserPostsCount(); // Refetch user posts count after adding a post
         } catch (error) {
             toast.error('Failed to add post');
         }
@@ -33,15 +39,15 @@ export const usePost = (feedType?: string, authUser?: User | null) => {
         try {
             await deletePostAction(postId).unwrap();
             toast.success('Post deleted successfully');
+            refetchUserPostsCount(); // Refetch user posts count after deleting a post
         } catch (error) {
-            toast.error('Failed to delete post');
+            console.error('Failed to delete post:', error);
         }
     };
 
     const handleLikePost = async (postId: string) => {
         try {
             await likePostAction(postId).unwrap();
-            toast.success('Post liked successfully');
         } catch (error) {
             toast.error('Failed to like the post');
         }
@@ -59,6 +65,7 @@ export const usePost = (feedType?: string, authUser?: User | null) => {
     return {
         posts,
         isLoading,
+        userPostsCount: userPostsCountData?.length || 0,
         addPostAction: handleAddPost,
         deletePostAction: handleDeletePost,
         likePostAction: handleLikePost,

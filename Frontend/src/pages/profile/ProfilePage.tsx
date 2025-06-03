@@ -20,7 +20,7 @@ export const ProfilePage = () => {
   });
   const { data: authUser } = useAuthCheckQuery();
   const [feedType, setFeedType] = useState<string>("posts");
-  const { posts, isLoading } = usePost(feedType, user);
+  const { posts, isLoading, userPostsCount } = usePost(feedType, user);
   const [coverImg, setCoverImg] = useState<string | null>(null);
   const [profileImg, setProfileImg] = useState<string | null>(null);
 
@@ -107,7 +107,7 @@ export const ProfilePage = () => {
               <div className="flex flex-col">
                 <p className="font-bold text-lg">{user?.fullName}</p>
                 <span className="text-sm text-slate-500">
-                  {posts?.length} posts
+                  {userPostsCount} posts
                 </span>
               </div>
             </div>

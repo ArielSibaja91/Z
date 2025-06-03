@@ -22,6 +22,7 @@ export const LoginPage = () => {
       toast.success("Logged in successfully!");
       navigate("/");
     } catch (error) {
+      toast.error("Login failed. Please check your credentials.");
       console.error("Login error:", error);
     }
   };

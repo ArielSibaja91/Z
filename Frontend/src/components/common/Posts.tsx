@@ -11,11 +11,21 @@ type PostsProps = {
 export const Posts: React.FC<PostsProps> = ({ posts, isLoading }) => {
   const { deletePostAction, likePostAction, commentPostAction } = usePost();
   if (!Array.isArray(posts) || posts.length === 0) {
-    return <PostSkeleton />;
+    return (
+      <div className="text-center text-gray-500 p-4">
+        {isLoading ?
+        <>
+          <PostSkeleton />
+          <PostSkeleton />
+          <PostSkeleton />
+          <PostSkeleton />
+        </> 
+        : "No posts available."}
+      </div>
+    )
   };
   return (
     <>
-      {isLoading && <PostSkeleton />}
       {!isLoading && posts && posts.map((post) => (
         <Post
           key={post._id}

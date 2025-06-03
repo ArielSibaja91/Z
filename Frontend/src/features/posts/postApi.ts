@@ -4,7 +4,7 @@ import { RootState } from '../../store/store';
 
 interface FetchPostsArgs {
     feedType?: string;
-    authUser?: User | null;
+    profileUser?: User | null;
 }
 
 export const postApi = createApi({
@@ -13,7 +13,7 @@ export const postApi = createApi({
     tagTypes: ['Posts'],
     endpoints: (builder) => ({
         fetchPosts: builder.query<Post[], FetchPostsArgs>({
-            query: ({ feedType, authUser }) => {
+            query: ({ feedType, profileUser }) => {
                 let endpoint = '';
                 switch (feedType) {
                     case 'forYou':
@@ -23,10 +23,10 @@ export const postApi = createApi({
                         endpoint = '/posts/following';
                         break;
                     case 'posts':
-                        endpoint = `/posts/user/${authUser?.username}`;
+                        endpoint = `/posts/user/${profileUser?.username}`;
                         break;
                     case 'likes':
-                        endpoint = `/posts/likes/${authUser?._id}`;
+                        endpoint = `/posts/likes/${profileUser?._id}`;
                         break;
                 }
                 return endpoint;
