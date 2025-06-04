@@ -10,32 +10,34 @@ type PostsProps = {
 
 export const Posts: React.FC<PostsProps> = ({ posts, isLoading }) => {
   const { deletePostAction, likePostAction, commentPostAction } = usePost();
-  if (!Array.isArray(posts) || posts.length === 0) {
-    return (
-      <div className="text-center text-gray-500 p-4">
-        {isLoading ?
-        <>
-          <PostSkeleton />
-          <PostSkeleton />
-          <PostSkeleton />
-          <PostSkeleton />
-        </> 
-        : "No posts available."}
-      </div>
-    )
-  };
+  console.log({posts, isLoading});
   return (
     <>
-      {!isLoading && posts && posts.map((post) => (
-        <Post
-          key={post._id}
-          post={post}
-          isLoading={isLoading}
-          deletePost={deletePostAction}
-          likePost={likePostAction}
-          commentPost={commentPostAction}
-        />
-      ))}
+      {isLoading && (
+        <div className='text-center text-gray-500 p-4'>
+          <PostSkeleton />
+          <PostSkeleton />
+          <PostSkeleton />
+          <PostSkeleton />
+        </div>
+      )}
+      {!isLoading && posts && posts.length > 0 && (
+        posts.map((post) => (
+          <Post
+            key={post._id}
+            post={post}
+            isLoading={isLoading}
+            deletePost={deletePostAction}
+            likePost={likePostAction}
+            commentPost={commentPostAction}
+          />
+        ))
+      )}
+      {!isLoading && posts && posts.length === 0 && (
+        <div className='text-center text-gray-500 p-4'>
+          <p>No posts found.</p>
+        </div>
+      )}
     </>
   );
 };
