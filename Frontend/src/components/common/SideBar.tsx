@@ -9,10 +9,13 @@ import { useLogoutMutation } from "../../features/auth/authApi";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { authApi } from "../../features/auth/authApi";
+import { useGetNotificationsQuery } from "../../features/notifications/notificationApi";
 import toast from "react-hot-toast";
 
 export const SideBar = () => {
   const { data: user } = useAuthCheckQuery();
+  const { data: notifications } = useGetNotificationsQuery();
+  const notificationsCount = notifications?.length || 0;
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -47,9 +50,16 @@ export const SideBar = () => {
           <li className='flex justify-center md:justify-start'>
             <Link
               to='/notifications'
-              className='flex gap-3 items-center hover:bg-stone-900 transition-all rounded-full duration-300 py-2 pl-2 pr-2 max-w-fit cursor-pointer'
+              className='relative flex gap-3 items-center hover:bg-stone-900 transition-all rounded-full duration-300 py-2 pl-2 pr-2 max-w-fit cursor-pointer'
             >
               <IoNotifications className='w-6 h-6' />
+              {
+                notificationsCount > 0 && (
+                  <span className='absolute left-5 top-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white'>
+                    {notificationsCount > 99 ? "99+" : notificationsCount}
+                  </span>
+                )
+              }
               <span className='text-lg hidden md:block'>Notifications</span>
             </Link>
           </li>

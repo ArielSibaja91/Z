@@ -2,13 +2,15 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { LoadingSpinner } from "../../components/common/LoadingSpinner";
 import { IoSettingsOutline } from "react-icons/io5";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaTrash } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
 import {
   useGetNotificationsQuery,
   useDeleteNotificationsMutation,
+  useDeleteNotificationMutation,
 } from "../../features/notifications/notificationApi";
 import { toast } from "react-hot-toast";
+import { NotificationSkeleton } from "../../components/skeletons/NotificationSkeleton";
 
 export const NotificationPage = () => {
   const {
@@ -20,6 +22,8 @@ export const NotificationPage = () => {
 
   const [deleteNotificationsMutation, { isLoading: isDeleting }] =
     useDeleteNotificationsMutation();
+
+  const [deleteNotificationMutation] = useDeleteNotificationMutation();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -40,6 +44,18 @@ export const NotificationPage = () => {
     } catch (err: any) {
       console.error("Failed to delete notifications:", err);
       toast.error(err.data?.error || "Failed to delete notifications");
+    }
+  };
+
+  const handleDeleteNotification = async (
+    notificationId: string
+  ): Promise<void> => {
+    try {
+      await deleteNotificationMutation(notificationId).unwrap();
+      toast.success("Notification deleted successfully!");
+    } catch (error) {
+      console.error("Failed to delete notification:", error);
+      toast.error("Failed to delete notification");
     }
   };
 
@@ -82,8 +98,13 @@ export const NotificationPage = () => {
         </div>
       </div>
       {(isLoading || isDeleting) && (
-        <div className='flex justify-center h-full items-center'>
-          <LoadingSpinner />
+        <div className='flex flex-col'>
+          <NotificationSkeleton />
+          <NotificationSkeleton />
+          <NotificationSkeleton />
+          <NotificationSkeleton />
+          <NotificationSkeleton />
+          <NotificationSkeleton />
         </div>
       )}
       {!isLoading && !isDeleting && notifications?.length === 0 && (
@@ -106,13 +127,14 @@ export const NotificationPage = () => {
               )}
               <Link to={`/profile/${notification.from.username}`}>
                 <div className='avatar'>
-                  <div className='w-8 rounded-full'>
+                  <div className='w-8'>
                     <img
                       src={
                         notification.from.profileImg ||
                         "/avatar-placeholder.png"
                       }
                       alt={`${notification.from.username}'s profile`}
+                      className='rounded-full'
                     />
                   </div>
                 </div>
@@ -125,6 +147,15 @@ export const NotificationPage = () => {
                     : "liked your post"}
                 </div>
               </Link>
+              <span className='flex justify-end flex-1'>
+                {!isLoading && (
+                  <FaTrash
+                    className='cursor-pointer hover:text-red-500'
+                    onClick={() => handleDeleteNotification(notification._id)}
+                  />
+                )}
+                {isLoading && <LoadingSpinner className='w-5 h-5' />}
+              </span>
             </div>
           </div>
         ))}
