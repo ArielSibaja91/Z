@@ -10,12 +10,14 @@ export interface User {
     following?: string[];
     isFollowing?: boolean;
     followers?: string[];
+    createdAt?: Date;
 };
 
 export interface Comment {
     _id: string;
     user: User;
     text: string;
+    createdAt: Date;
 };
 
 export interface Post {

@@ -98,6 +98,7 @@ export const postApi = createApi({
                     _id: Date.now().toString(),
                     user: authUser,
                     text,
+                    createdAt: new Date()
                 };
                 const patchResult = dispatch(
                     postApi.util.updateQueryData('fetchPosts', {}, (draft) => {
