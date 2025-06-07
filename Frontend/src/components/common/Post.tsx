@@ -135,6 +135,9 @@ export const Post: React.FC<
                           <span className="text-gray-700 text-sm">
                             @{comment.user.username}
                           </span>
+                          <span>
+                            · {formatPostDate(comment.createdAt)}
+                          </span>
                         </div>
                         <div className="text-sm">{comment.text}</div>
                       </div>

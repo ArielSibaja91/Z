@@ -11,6 +11,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
+import { formatMemberSinceDate } from "../../utils/date/date";
 import toast from "react-hot-toast";
 
 export const ProfilePage = () => {
@@ -32,6 +33,7 @@ export const ProfilePage = () => {
 
   const isMyProfile = user?.username === authUser?.username;
   const isCurrentlyFollowing = authUser?._id ? user?.followers?.includes(authUser._id) : false;
+  const formattedDate = user?.createdAt ? formatMemberSinceDate(user.createdAt) : undefined;
 
   const handleImgChange = (
     e: ChangeEvent<HTMLInputElement>,
@@ -208,7 +210,7 @@ export const ProfilePage = () => {
                 <div className="flex gap-2 items-center">
                   <IoCalendarOutline className="w-4 h-4 text-slate-500" />
                   <span className="text-sm text-slate-500">
-                    Joined July 2021
+                    {formattedDate || "Member since unknown"}
                   </span>
                 </div>
               </div>

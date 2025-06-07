@@ -57,6 +57,9 @@ const userSchema = new mongoose.Schema({
             default: [],
         },
     ],
+    createdAt: {
+        type: Date,
+    },
 },{timestamps: true});
 
 const User = mongoose.model("User", userSchema);
