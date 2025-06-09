@@ -17,14 +17,12 @@ export const LoginPage = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    try {
-      await login(formData).unwrap();
-      toast.success("Logged in successfully!");
-      navigate("/");
-    } catch (error) {
-      toast.error("Login failed. Please check your credentials.");
-      console.error("Login error:", error);
-    }
+    await toast.promise(login(formData).unwrap(), {
+      loading: 'Loggin...',
+      success: <b>Logged in successfully!</b>,
+      error: <b>Login failed. Please check your credentials.</b>
+    });
+    navigate("/");
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {

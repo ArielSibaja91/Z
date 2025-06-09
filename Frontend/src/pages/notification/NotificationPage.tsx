@@ -32,31 +32,38 @@ export const NotificationPage = () => {
   };
 
   const handleDeleteNotifications = async (): Promise<void> => {
-    try {
-      if (notifications?.length === 0) {
-        toast.error("No notifications to delete.");
-        setIsOpen(false);
-        return;
-      }
-      await deleteNotificationsMutation().unwrap();
-      toast.success("All notifications deleted successfully!");
+    if (notifications?.length === 0) {
+      toast.error("No notifications to delete.");
       setIsOpen(false);
-    } catch (err: any) {
-      console.error("Failed to delete notifications:", err);
-      toast.error(err.data?.error || "Failed to delete notifications");
+      return;
     }
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete all notifications?"
+    );
+    if (!confirmDelete) {
+      setIsOpen(false);
+      return;
+    }
+    await toast.promise(deleteNotificationsMutation().unwrap(), {
+      loading: "Deleting notifications...",
+      success: <b>All notifications deleted successfully!</b>,
+      error: <b>Failed to delete notifications</b>,
+    });
+    setIsOpen(false);
   };
 
   const handleDeleteNotification = async (
     notificationId: string
   ): Promise<void> => {
-    try {
-      await deleteNotificationMutation(notificationId).unwrap();
-      toast.success("Notification deleted successfully!");
-    } catch (error) {
-      console.error("Failed to delete notification:", error);
-      toast.error("Failed to delete notification");
-    }
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this notification?"
+    );
+    if (!confirmDelete) return;
+    await toast.promise(deleteNotificationMutation(notificationId).unwrap(), {
+      loading: "Deleting notification...",
+      success: <b>Notification deleted successfully!</b>,
+      error: <b>Failed to delete notification</b>,
+    });
   };
 
   if (isError) {
