@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 
   if (isLoading) {
     return (
-      <div className="h-screen flex justify-center items-center">
+      <div className="h-screen w-screen flex justify-center items-center">
         <LoadingSpinner className="w-6 h-6" />
       </div>
     );
@@ -34,7 +34,7 @@ const AuthRoute = ({ children }: { children: JSX.Element }) => {
 
   if (isLoading) {
     return (
-      <div className="h-screen flex justify-center items-center">
+      <div className="h-screen w-screen flex justify-center items-center">
         <LoadingSpinner className="w-6 h-6" />
       </div>
     );
@@ -52,7 +52,7 @@ export const App = () => {
 
   if (isLoading) {
     return (
-      <div className="h-screen flex justify-center items-center">
+      <div className="h-screen w-screen flex justify-center items-center">
         <LoadingSpinner className="w-6 h-6" />
       </div>
     );
@@ -104,7 +104,7 @@ export const App = () => {
         />
       </Routes>
       {isSuccess && user && <RightPanel />}
-      <Toaster />
+      <Toaster reverseOrder={true} />
     </div>
   );
 };

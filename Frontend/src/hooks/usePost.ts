@@ -26,23 +26,25 @@ export const usePost = (feedType?: string, profileUser?: User | null) => {
     const [commentPostAction] = useCommentPostMutation();
 
     const handleAddPost = async (postData: { text: string; img: string | null }) => {
-        try {
-            await addPostAction(postData).unwrap();
-            toast.success('Post created successfully');
-            refetchUserPostsCount(); // Refetch user posts count after adding a post
-        } catch (error) {
-            toast.error('Failed to add post');
-        }
+        await toast.promise(addPostAction(postData).unwrap(), {
+            loading: 'Posting...',
+            success: 'Post created successfully!',
+            error: 'Failed to add post'
+        });
+        refetchUserPostsCount(); // Refetch user posts count after adding a post
     };
 
     const handleDeletePost = async (postId: string) => {
-        try {
-            await deletePostAction(postId).unwrap();
-            toast.success('Post deleted successfully');
-            refetchUserPostsCount(); // Refetch user posts count after deleting a post
-        } catch (error) {
-            console.error('Failed to delete post:', error);
-        }
+        const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+        if (!confirmDelete) {
+            return;
+        };
+        await toast.promise(deletePostAction(postId).unwrap(), {
+            loading: 'Deleting...',
+            success: 'Post deleted successfully',
+            error: 'Failed to delete post'
+        });
+        refetchUserPostsCount(); // Refetch user posts count after deleting a post
     };
 
     const handleLikePost = async (postId: string) => {
@@ -54,12 +56,11 @@ export const usePost = (feedType?: string, profileUser?: User | null) => {
     };
 
     const handleCommentPost = async (postId: string, text: string) => {
-        try {
-            await commentPostAction({ postId, text }).unwrap();
-            toast.success('Comment added successfully');
-        } catch (error) {
-            toast.error('Failed to add comment');
-        }
+        await toast.promise(commentPostAction({ postId, text }).unwrap(), {
+            loading: 'Adding comment...',
+            success: 'Comment added successfully',
+            error: 'Failed to add comment'
+        });
     };
 
     return {

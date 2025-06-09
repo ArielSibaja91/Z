@@ -1,7 +1,6 @@
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
 import { useAuthCheckQuery } from "../../features/auth/authApi";
 import { CiImageOn } from "react-icons/ci";
-import { BsEmojiSmileFill } from "react-icons/bs";
 import { IoCloseSharp } from "react-icons/io5";
 
 type CreatePostProps = {
@@ -71,7 +70,6 @@ export const CreatePost: React.FC<CreatePostProps> = ({ addPost }) => {
               className="fill-primary w-6 h-6 cursor-pointer"
               onClick={() => imgRef.current?.click()}
             />
-            <BsEmojiSmileFill className="fill-primary w-5 h-5 cursor-pointer" />
           </div>
           <input
             type="file"

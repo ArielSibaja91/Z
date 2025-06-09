@@ -24,14 +24,12 @@ export const SignUpPage = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    try {
-      await signup(formData).unwrap();
-      toast.success("Signup successful! Welcome to Z.");
-      navigate("/");
-    } catch (error) {
-      toast.error("Signup failed. Please check your credentials.");
-      console.error("Error en el registro:", error);
-    }
+    await toast.promise(signup(formData).unwrap(), {
+      loading: 'Sigin Up...',
+      success: <b>Signup successful! Welcome to Z!</b>,
+      error: <b>Signup failed. Please check your credentials.</b>
+    });
+    navigate("/");
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {

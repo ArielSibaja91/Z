@@ -6,30 +6,34 @@ import { Link } from "react-router-dom";
 import { BiLogOut } from "react-icons/bi";
 import { useAuthCheckQuery } from "../../features/auth/authApi";
 import { useLogoutMutation } from "../../features/auth/authApi";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { authApi } from "../../features/auth/authApi";
 import { useGetNotificationsQuery } from "../../features/notifications/notificationApi";
+import { LoadingSpinner } from "./LoadingSpinner";
 import toast from "react-hot-toast";
 
 export const SideBar = () => {
   const { data: user } = useAuthCheckQuery();
   const { data: notifications } = useGetNotificationsQuery();
   const notificationsCount = notifications?.length || 0;
-  const [logout] = useLogoutMutation();
-  const navigate = useNavigate();
+  const [logout, { isLoading: isLogginOut }] = useLogoutMutation();
   const dispatch = useDispatch();
-
-  const handleLogout = async () => {
-    try {
-      toast.success("Logged out successfully!");
-      await logout().unwrap();
-      dispatch(authApi.util.resetApiState());
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
+  const handleLogout = async (): Promise<void> => {
+    await toast.promise(logout().unwrap(), {
+      loading: "Loggin Out...",
+      success: <b>Logged out successfully!</b>,
+      error: <b>Failed to logout!</b>,
+    });
+    dispatch(authApi.util.resetApiState());
   };
+
+  if (isLogginOut) {
+    return (
+      <div className='h-screen w-screen flex justify-center items-center'>
+        <LoadingSpinner className='w-6 h-6' />
+      </div>
+    );
+  }
 
   return (
     <nav className='md:flex-[2_2_0] w-18 max-w-52'>
@@ -53,13 +57,11 @@ export const SideBar = () => {
               className='relative flex gap-3 items-center hover:bg-stone-900 transition-all rounded-full duration-300 py-2 pl-2 pr-2 max-w-fit cursor-pointer'
             >
               <IoNotifications className='w-6 h-6' />
-              {
-                notificationsCount > 0 && (
-                  <span className='absolute left-5 top-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white'>
-                    {notificationsCount > 99 ? "99+" : notificationsCount}
-                  </span>
-                )
-              }
+              {notificationsCount > 0 && (
+                <span className='absolute left-5 top-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white'>
+                  {notificationsCount > 99 ? "99+" : notificationsCount}
+                </span>
+              )}
               <span className='text-lg hidden md:block'>Notifications</span>
             </Link>
           </li>
