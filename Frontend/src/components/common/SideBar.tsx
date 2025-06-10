@@ -9,16 +9,19 @@ import { useLogoutMutation } from "../../features/auth/authApi";
 import { useDispatch } from "react-redux";
 import { authApi } from "../../features/auth/authApi";
 import { useGetNotificationsQuery } from "../../features/notifications/notificationApi";
-import { LoadingSpinner } from "./LoadingSpinner";
 import toast from "react-hot-toast";
 
 export const SideBar = () => {
   const { data: user } = useAuthCheckQuery();
   const { data: notifications } = useGetNotificationsQuery();
   const notificationsCount = notifications?.length || 0;
-  const [logout, { isLoading: isLogginOut }] = useLogoutMutation();
+  const [logout] = useLogoutMutation();
   const dispatch = useDispatch();
   const handleLogout = async (): Promise<void> => {
+    const confirm = window.confirm(
+      "Are you sure you want to logout?"
+    );
+    if (!confirm) return;
     await toast.promise(logout().unwrap(), {
       loading: "Loggin Out...",
       success: <b>Logged out successfully!</b>,
@@ -26,14 +29,6 @@ export const SideBar = () => {
     });
     dispatch(authApi.util.resetApiState());
   };
-
-  if (isLogginOut) {
-    return (
-      <div className='h-screen w-screen flex justify-center items-center'>
-        <LoadingSpinner className='w-6 h-6' />
-      </div>
-    );
-  }
 
   return (
     <nav className='md:flex-[2_2_0] w-18 max-w-52'>
@@ -76,31 +71,32 @@ export const SideBar = () => {
           </li>
         </ul>
         {user && (
-          <Link
-            to={`/profile/${user.username}`}
-            className='mt-auto mb-10 flex gap-2 items-start transition-all duration-300 hover:bg-[#181818] py-2 px-4 rounded-full'
-          >
-            <div className='avatar hidden md:inline-flex'>
-              <div className='w-8'>
-                <img
-                  className='rounded-full'
-                  src={user?.profileImg || "/avatar-placeholder.png"}
-                />
+          <div className='mt-auto mb-10 flex gap-2 items-center transition-all duration-300 hover:bg-[#181818] py-2 px-4 rounded-full'>
+            <Link
+              to={`/profile/${user.username}`}
+              className='flex flex-1 items-center gap-2'
+            >
+              <div className='avatar hidden md:inline-flex'>
+                <div className='w-8'>
+                  <img
+                    className='rounded-full'
+                    src={user?.profileImg || "/avatar-placeholder.png"}
+                    alt='User profile'
+                  />
+                </div>
               </div>
-            </div>
-            <div className='flex justify-between flex-1'>
               <div className='hidden md:block'>
                 <p className='text-white font-bold text-sm w-20 truncate'>
                   {user?.fullName}
                 </p>
                 <p className='text-slate-500 text-sm'>@{user?.username}</p>
               </div>
-              <BiLogOut
-                className='w-5 h-5 cursor-pointer'
-                onClick={handleLogout}
-              />
-            </div>
-          </Link>
+            </Link>
+            <BiLogOut
+              className='w-5 h-5 cursor-pointer ml-auto'
+              onClick={handleLogout}
+            />
+          </div>
         )}
       </div>
     </nav>

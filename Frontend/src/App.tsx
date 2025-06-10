@@ -8,7 +8,7 @@ import { RightPanel } from "./components/common/RightPanel";
 import { ProfilePage } from "./pages/profile/ProfilePage";
 import { Toaster } from "react-hot-toast";
 import { LoadingSpinner } from "./components/common/LoadingSpinner";
-import { useAuthCheckQuery } from "./features/auth/authApi";
+import { useAuthCheckQuery, useLogoutMutation } from "./features/auth/authApi";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const { data: user, isLoading, isError } = useAuthCheckQuery();
@@ -49,8 +49,9 @@ const AuthRoute = ({ children }: { children: JSX.Element }) => {
 
 export const App = () => {
   const { data: user, isLoading, isSuccess } = useAuthCheckQuery();
+  const [_logout, { isLoading: isLoggingOut }] = useLogoutMutation();
 
-  if (isLoading) {
+  if (isLoading || isLoggingOut) {
     return (
       <div className="h-screen w-screen flex justify-center items-center">
         <LoadingSpinner className="w-6 h-6" />

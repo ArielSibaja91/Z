@@ -44,6 +44,8 @@ export const CreatePost: React.FC<CreatePostProps> = ({ addPost }) => {
           placeholder="What's happening?"
           value={text}
           onChange={(e) => setText(e.target.value)}
+          required
+          maxLength={500}
         />
         {img && (
           <div className="relative w-72 mx-auto">

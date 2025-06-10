@@ -17,7 +17,6 @@ export const Post: React.FC<
     isLoading: boolean;
   }
 > = ({ post, deletePost, likePost, commentPost, isLoading }) => {
-  // Validación temprana para evitar errores si el post es null o undefined
   if (!post) return null;
 
   const { modalRef, backdropRef, openModal, closeModal } = useModal();
@@ -153,6 +152,7 @@ export const Post: React.FC<
                     placeholder="Add a comment..."
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
+                    required
                   />
                   <button className="bg-primary rounded-full text-white px-4 py-2">
                     {isLoading ? (

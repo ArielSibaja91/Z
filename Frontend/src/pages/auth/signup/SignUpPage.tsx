@@ -48,7 +48,7 @@ export const SignUpPage = () => {
         >
           <ZSVG className='w-24 lg:hidden fill-white' />
           <h1 className='text-[2.70rem] leading-none font-extrabold text-white/90'>
-            Welcome to Z.
+            Welcome to Z!
           </h1>
           <h2 className='text-2xl font-extrabold text-white/90'>Join In now</h2>
           <label className='border border-white/25 p-2 rounded flex items-center gap-2'>
@@ -61,6 +61,7 @@ export const SignUpPage = () => {
               onChange={handleInputChange}
               value={formData.email}
               disabled={isLoading}
+              required
             />
           </label>
           <div className='flex gap-4 flex-wrap'>
@@ -74,6 +75,7 @@ export const SignUpPage = () => {
                 onChange={handleInputChange}
                 value={formData.username}
                 disabled={isLoading}
+                required
               />
             </label>
             <label className='border border-white/25 p-2 rounded flex items-center gap-2 flex-1'>
@@ -86,6 +88,7 @@ export const SignUpPage = () => {
                 onChange={handleInputChange}
                 value={formData.fullName}
                 disabled={isLoading}
+                required
               />
             </label>
           </div>
@@ -99,6 +102,7 @@ export const SignUpPage = () => {
               onChange={handleInputChange}
               value={formData.password}
               disabled={isLoading}
+              required
             />
           </label>
           <button
