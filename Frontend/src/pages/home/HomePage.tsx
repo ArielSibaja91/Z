@@ -34,7 +34,9 @@ export const HomePage = () => {
         </button>
       </header>
       {/*  CREATE POST INPUT */}
-      <CreatePost addPost={addPostAction} />
+      {feedType === "forYou" && (
+        <CreatePost addPost={addPostAction} />
+      )}
       {/* POSTS */}
       <Posts posts={posts} isLoading={isLoading} />
     </main>
