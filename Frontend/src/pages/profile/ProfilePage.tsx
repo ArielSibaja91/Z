@@ -170,7 +170,7 @@ export const ProfilePage = () => {
                   onClick={handleFollowUnfollow}
                   disabled={isFollowingOrUnfollowing}
                 >
-                  {isFollowingOrUnfollowing ? (isCurrentlyFollowing ? "Unfollowing..." : "Following...") : (isCurrentlyFollowing ? "Unfollow" : "Follow")}
+                  {isFollowingOrUnfollowing ? (isCurrentlyFollowing ? "Unfollowing..." : "Following...") : (isCurrentlyFollowing ? "Following" : "Follow")}
                 </button>
               )}
               {(coverImg || profileImg) && isMyProfile && (

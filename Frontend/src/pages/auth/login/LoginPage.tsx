@@ -37,7 +37,8 @@ export const LoginPage = () => {
       <div className='flex-1 flex flex-col justify-center items-center'>
         <form className='w-full flex gap-4 flex-col' onSubmit={handleSubmit}>
           <ZSVG className='w-24 lg:hidden fill-white' />
-          <h1 className='text-4xl font-extrabold text-white'>{"Let's"} go.</h1>
+          <h1 className='text-6xl font-bold text-white mb-4'>What's happening now</h1>
+          <h2 className='text-3xl font-bold text-white mb-1'>Join Today</h2>
           <label className='border border-white/25 p-2 rounded flex items-center gap-2'>
             <MdOutlineMail />
             <input
