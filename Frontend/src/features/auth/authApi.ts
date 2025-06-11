@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { User } from '../../types/postProps';
 import { notificationApi } from '../notifications/notificationApi';
+import { usersApi } from '../user/userApi';
 
 export const authApi = createApi({
     reducerPath: 'authApi',
@@ -17,6 +18,7 @@ export const authApi = createApi({
             async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
                 await queryFulfilled;
                 dispatch(notificationApi.util.invalidateTags([{ type: 'Notification', id: 'LIST' }]));
+                dispatch(usersApi.util.invalidateTags(['User']));
             },
         }),
         login: builder.mutation<User, { username: string; password: string }>({
@@ -28,6 +30,7 @@ export const authApi = createApi({
             async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
                 await queryFulfilled;
                 dispatch(notificationApi.util.invalidateTags([{ type: 'Notification', id: 'LIST' }]));
+                dispatch(usersApi.util.invalidateTags(['User']));
             },
         }),
         logout: builder.mutation<{ message: string }, void>({
@@ -38,6 +41,7 @@ export const authApi = createApi({
             async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
                 await queryFulfilled;
                 dispatch(notificationApi.util.invalidateTags([{ type: 'Notification', id: 'LIST' }]));
+                dispatch(usersApi.util.invalidateTags(['User']));
             },
         }),
         authCheck: builder.query<User, void>({
