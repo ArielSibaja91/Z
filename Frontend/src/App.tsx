@@ -16,7 +16,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   if (isLoading) {
     return (
       <div className="h-screen w-screen flex justify-center items-center">
-        <LoadingSpinner className="w-6 h-6" />
+        <LoadingSpinner className="w-6 h-6 fill-white" />
       </div>
     );
   }
@@ -35,7 +35,7 @@ const AuthRoute = ({ children }: { children: JSX.Element }) => {
   if (isLoading) {
     return (
       <div className="h-screen w-screen flex justify-center items-center">
-        <LoadingSpinner className="w-6 h-6" />
+        <LoadingSpinner className="w-6 h-6 fill-white" />
       </div>
     );
   }
@@ -54,7 +54,7 @@ export const App = () => {
   if (isLoading || isLoggingOut) {
     return (
       <div className="h-screen w-screen flex justify-center items-center">
-        <LoadingSpinner className="w-6 h-6" />
+        <LoadingSpinner className="w-6 h-6 fill-white" />
       </div>
     );
   }
