@@ -10,7 +10,6 @@ type PostsProps = {
 
 export const Posts: React.FC<PostsProps> = ({ posts, isLoading }) => {
   const { deletePostAction, likePostAction, commentPostAction } = usePost();
-  console.log({posts, isLoading});
   return (
     <>
       {isLoading && (

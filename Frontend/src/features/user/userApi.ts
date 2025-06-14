@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { User } from "../../types/postProps";
+import { RootState } from '../../store/store';
 
 export const usersApi = createApi({
     reducerPath: 'usersApi',
@@ -16,37 +17,61 @@ export const usersApi = createApi({
         }),
         followUnfollowUser: builder.mutation<
             { message: string },
-            { userId: string }
+            { userId: string; currentUserFollowing: string[] }
         >({
             query: ({ userId }) => ({
                 url: `/follow/${userId}`,
                 method: 'POST',
             }),
             invalidatesTags: ['User'],
-            // Opcional: optimistic update para una mejor UX
-            async onQueryStarted({ userId }, { dispatch, queryFulfilled }) {
-                // Acceder al estado actual si es necesario
-                // const state = getState() as RootState; // Si necesitas el tipo RootState
-                const patchResult = dispatch(
+            async onQueryStarted({ userId, currentUserFollowing }, { dispatch, queryFulfilled, getState }) {
+                const state = getState() as RootState;
+                const authUser = (getState() as RootState).authApi.queries['authCheck(undefined)']?.data as User | undefined;
+
+                let patchResultForSuggested: any;
+                let patchResultForProfile: any;
+                patchResultForSuggested = dispatch(
                     usersApi.util.updateQueryData('getSuggestedUsers', undefined, (draft) => {
-                        if (draft) {
-                            const userIndex = draft.findIndex(user => user._id === userId);
-                            if (userIndex !== -1) {
-                                // Aquí necesitarías ajustar el estado de seguimiento.
-                                // Como tu backend solo devuelve un mensaje, y el isFollowing
-                                // es algo que infieres en el frontend, esto es un poco más complejo.
-                                // Idealmente, tu backend devolvería el estado actualizado del usuario seguido,
-                                // o al menos una indicación si se siguió o se dejó de seguir.
-                                // Por ahora, solo invalidaremos el tag.
-                                // Si tu modelo `User` tiene un campo `isFollowing`, podrías actualizarlo aquí.
+                        const userIndex = draft.findIndex(user => user._id === userId);
+                        if (userIndex !== -1) {
+                            const isCurrentlyFollowing = currentUserFollowing?.includes(userId);
+
+                            if (draft[userIndex].followers && authUser?._id) {
+                                if (isCurrentlyFollowing) {
+                                    draft[userIndex].followers = draft[userIndex].followers.filter(
+                                        (id: string) => id !== authUser._id
+                                    );
+                                } else {
+                                    draft[userIndex].followers.push(authUser._id);
+                                }
                             }
                         }
                     })
                 );
+                const targetUser = usersApi.endpoints.getSuggestedUsers.select(undefined)(state)?.data?.find(user => user._id === userId);
+                if (targetUser?.username) {
+                    patchResultForProfile = dispatch(
+                        usersApi.util.updateQueryData('getUserProfile', targetUser.username, (draft) => {
+                            if (draft && draft.followers && authUser?._id) {
+                                const isCurrentlyFollowing = currentUserFollowing?.includes(userId);
+                                if (isCurrentlyFollowing) {
+                                    draft.followers = draft.followers.filter(
+                                        (id: string) => id !== authUser._id
+                                    );
+                                } else {
+                                    draft.followers.push(authUser._id);
+                                }
+                            }
+                        })
+                    );
+                };
                 try {
                     await queryFulfilled;
                 } catch {
-                    patchResult.undo();
+                    patchResultForSuggested?.undo();
+                    if (patchResultForProfile) {
+                        patchResultForProfile.undo();
+                    }
                 }
             },
         }),

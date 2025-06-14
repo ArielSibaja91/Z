@@ -1,16 +1,16 @@
 export interface User {
-    _id?: string;
-    username?: string;
-    fullName?: string;
-    password?: string;
-    profileImg?: string;
-    coverImg?: string;
-    bio?: string;
-    link?: string;
-    following?: string[];
-    isFollowing?: boolean;
-    followers?: string[];
-    createdAt?: Date;
+    _id: string;
+    username: string;
+    fullName: string;
+    password: string;
+    profileImg: string;
+    coverImg: string;
+    bio: string;
+    link: string;
+    following: string[];
+    isFollowing: boolean;
+    followers: string[];
+    createdAt: Date;
 };
 
 export interface Comment {

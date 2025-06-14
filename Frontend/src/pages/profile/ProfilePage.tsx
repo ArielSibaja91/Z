@@ -13,6 +13,7 @@ import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { formatMemberSinceDate } from "../../utils/date/date";
 import toast from "react-hot-toast";
+import { LoadingSpinner } from "../../components/common/LoadingSpinner";
 
 export const ProfilePage = () => {
   const { username } = useParams<{ username: string }>();
@@ -58,7 +59,7 @@ export const ProfilePage = () => {
     const handleFollowUnfollow = async () => {
     if (!user || !authUser) return;
     try {
-      await followUnfollowUser({ userId: user._id as string }).unwrap();
+      await followUnfollowUser({ userId: user._id as string, currentUserFollowing: authUser?.following || [] }).unwrap();
     } catch (err) {
       console.error("Error al seguir/dejar de seguir:", err);
     }
@@ -170,7 +171,7 @@ export const ProfilePage = () => {
                   onClick={handleFollowUnfollow}
                   disabled={isFollowingOrUnfollowing}
                 >
-                  {isFollowingOrUnfollowing ? (isCurrentlyFollowing ? "Unfollowing..." : "Following...") : (isCurrentlyFollowing ? "Following" : "Follow")}
+                  {isFollowingOrUnfollowing ? <LoadingSpinner className="w-5 h-5 fill-white" /> : (isCurrentlyFollowing ? "Following" : "Follow")}
                 </button>
               )}
               {(coverImg || profileImg) && isMyProfile && (

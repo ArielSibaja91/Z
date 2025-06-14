@@ -1,11 +1,16 @@
 import { Link } from "react-router-dom";
 import { RightPanelSkeleton } from "../skeletons/RightPanelSkeleton";
 import { useGetSuggestedUsersQuery, useFollowUnfollowUserMutation } from "../../features/user/userApi";
+import { RootState } from "../../store/store";
+import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 export const RightPanel = () => {
   const { data: suggestedUsers, isLoading, isError, error } = useGetSuggestedUsersQuery();
   const [followUnfollowUser, { isLoading: isMutatingFollow }] = useFollowUnfollowUserMutation();
+  const authUser = (useSelector((state: RootState) => state.authApi.queries['authCheck(undefined)']?.data) as any) || null;
+  const currentUserFollowing = authUser?.following || [];
 
   if (isError) {
     console.error("Error fetching suggested users:", error);
@@ -41,7 +46,7 @@ export const RightPanel = () => {
 
   const handleFollowUnfollow = async (userId: string, isFollowing: boolean) => {
     try {
-      await followUnfollowUser({ userId }).unwrap();
+      await followUnfollowUser({ userId, currentUserFollowing }).unwrap();
       toast.success(isFollowing ? "User unfollowed" : "User followed");
     } catch (err: any) {
       console.error("Follow/Unfollow error", err);
@@ -94,7 +99,7 @@ export const RightPanel = () => {
                   }}
                   disabled={isMutatingFollow}
                 >
-                  {isMutatingFollow ? "..." : (user.isFollowing ? "Unfollow" : "Follow")}
+                  {isMutatingFollow ? <LoadingSpinner className="w-5 h-5 fill-black" /> : (user.isFollowing ? "Unfollow" : "Follow")}
                 </button>
                 </div>
               </Link>
