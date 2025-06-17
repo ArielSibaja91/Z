@@ -81,7 +81,7 @@ export const usersApi = createApi({
         >({
             query: (userData) => ({
                 url: '/update',
-                method: 'POST',
+                method: 'PATCH',
                 body: userData,
             }),
             invalidatesTags: (_result, _error, userData) => {

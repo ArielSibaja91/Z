@@ -3,6 +3,10 @@ import User from "../models/user.model";
 import Notification from "../models/notification.model";
 import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from 'cloudinary';
+import multer from "multer";
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 export const getUserProfile = async (req: Request, res: Response) => {
     const { username } = req.params;
