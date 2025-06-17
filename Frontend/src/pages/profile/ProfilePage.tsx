@@ -1,8 +1,7 @@
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState, useCallback } from "react";
 import { useGetUserProfileQuery, useFollowUnfollowUserMutation, useUpdateUserProfileMutation } from "../../features/user/userApi";
 import { useAuthCheckQuery } from "../../features/auth/authApi";
-import { Link } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { usePost } from "../../hooks/usePost";
 import { Posts } from "../../components/common/Posts";
 import { ProfileHeaderSkeleton } from "../../components/skeletons/ProfileHeaderSkeleton";
@@ -17,10 +16,11 @@ import { LoadingSpinner } from "../../components/common/LoadingSpinner";
 
 export const ProfilePage = () => {
   const { username } = useParams<{ username: string }>();
+  const navigate = useNavigate();
   const { data: user, isLoading: isUserLoading, refetch: refetchUserProfile } = useGetUserProfileQuery(username || '', {
     skip: !username,
   });
-  const { data: authUser } = useAuthCheckQuery();
+  const { data: authUser, refetch: refetchAuthUser } = useAuthCheckQuery();
   const [feedType, setFeedType] = useState<string>("posts");
   const { posts, isLoading, userPostsCount } = usePost(feedType, user);
   const [coverImg, setCoverImg] = useState<string | null>(null);
@@ -66,33 +66,34 @@ export const ProfilePage = () => {
   };
 
   const handleUpdateProfile = async () => {
-    if (!user) return;
     try {
-      const updateData: {
-        fullName?: string;
-        email?: string;
-        username?: string;
-        bio?: string;
-        link?: string;
-        profileImg?: string;
-        coverImg?: string;
-      } = {};
-
-      // Convert updateData to FormData
       const formData = new FormData();
-      Object.entries(updateData).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          formData.append(key, value);
-        }
-      });
+      if (profileImg) {
+        formData.append("profileImg", profileImg);
+      }
+      if (coverImg) {
+        formData.append("coverImg", coverImg);
+      }
 
       await updateUserProfile(formData).unwrap();
-      toast.success("Perfil actualizado exitosamente!");
+      toast.success("Profile image updated successfully!");
+      setProfileImg(null);
+      setCoverImg(null);
       refetchUserProfile();
-    } catch (err) {
-      console.error("Error al actualizar el perfil:", err);
+      refetchAuthUser();
+    } catch (error: any) {
+      console.error("Error updating profile images: ", error);
+      toast.error(error.data?.error || "Failed to update profile images.");
     }
   };
+
+    const handleProfileDataUpdate = useCallback((newUsername?: string) => {
+    if (newUsername && newUsername !== username) {
+      navigate(`/profile/${newUsername}`);
+    };
+    refetchUserProfile();
+    refetchAuthUser();
+  }, [username, navigate, refetchUserProfile, refetchAuthUser]);
 
   return (
     <main className="flex-[4_4_0] border-r border-white/20 min-h-screen">
@@ -164,7 +165,7 @@ export const ProfilePage = () => {
               </div>
             </div>
             <div className="flex justify-end px-4 mt-5">
-              {isMyProfile && <EditProfileModal />}
+              {isMyProfile && <EditProfileModal authUser={authUser} onProfileUpdated={handleProfileDataUpdate} />}
               {!isMyProfile && (
                 <button
                   className="bg-black text-white hover:bg-white hover:text-black outline outline-1 outline-white/35 px-4 py-1.5 rounded-full duration-150"
