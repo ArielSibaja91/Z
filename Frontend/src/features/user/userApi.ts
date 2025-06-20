@@ -89,6 +89,48 @@ export const usersApi = createApi({
                 return [{ type: 'User', id: username }];
             },
         }),
+        deleteProfileImg: builder.mutation<void, void>({
+            query: () => ({
+                url: '/profile/delete-image',
+                method: 'DELETE',
+            }),
+            invalidatesTags: (_result, _error, _arg) => [{ type: 'User', id: 'profile' }],
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                const patchResult = dispatch(
+                    usersApi.util.updateQueryData('getUserProfile', 'profile', (draft) => {
+                        if (draft) {
+                            draft.profileImg = "";
+                        }
+                    })
+                );
+                try {
+                    await queryFulfilled;
+                } catch {
+                    patchResult.undo();
+                }
+            }
+        }),
+        deleteCoverImg: builder.mutation<void, void>({
+            query: () => ({
+                url: '/cover/delete-image',
+                method: 'DELETE',
+            }),
+            invalidatesTags: (_result, _error, _arg) => [{ type: 'User', id: 'cover' }],
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                const patchResult = dispatch(
+                    usersApi.util.updateQueryData('getUserProfile', 'cover', (draft) => {
+                        if (draft) {
+                            draft.coverImg = "";
+                        }
+                    })
+                );
+                try {
+                    await queryFulfilled;
+                } catch {
+                    patchResult.undo();
+                }
+            }
+        }),
     }),
 });
 
@@ -97,4 +139,6 @@ export const {
     useGetSuggestedUsersQuery,
     useFollowUnfollowUserMutation,
     useUpdateUserProfileMutation,
+    useDeleteProfileImgMutation,
+    useDeleteCoverImgMutation
 } = usersApi;

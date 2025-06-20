@@ -158,3 +158,51 @@ export const updateUserProfile = async (req: any, res: Response) => {
 		res.status(500).json({ error: error });
     };
 };
+
+export const deleteProfileImg = async (req: any, response: Response) => {
+    const userId = req.user._id;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        };
+        if (user.profileImg) {
+            const publicId = user.profileImg.split("/").pop()?.split(".")[0];
+            if (publicId) {
+                await cloudinary.uploader.destroy(publicId);
+            };
+            user.profileImg = "";
+            await user.save();
+            return response.status(200).json({ message: "Profile image deleted successfully" });
+        } else {
+            return response.status(400).json({ error: "No profile image to delete" });
+        };
+    } catch (error) {
+        console.log("Error in deleteProfileImg: ", error);
+        response.status(500).json({ error: "Failed to delete profile image" });
+    };
+};
+
+export const deleteCoverImg = async (req: any, response: Response) => {
+    const userId = req.user._id;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        };
+        if (user.coverImg) {
+            const publicId = user.coverImg.split("/").pop()?.split(".")[0];
+            if (publicId) {
+                await cloudinary.uploader.destroy(publicId);
+            };
+            user.coverImg = "";
+            await user.save();
+            return response.status(200).json({ message: "Cover image deleted successfully" });
+        } else {
+            return response.status(400).json({ error: "No cover image to delete" });
+        };
+    } catch (error) {
+        console.log("Error in deleteCoverImg: ", error);
+        response.status(500).json({ error: "Failed to delete cover image" });
+    };
+};
