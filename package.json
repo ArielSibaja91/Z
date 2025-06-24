@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc --build ./backend/tsconfig.json",
-    "start": "node ./backend/dist/index.js",
-    "start:dev": "nodemon ./backend/src/index.ts",
-    "check-types": "cd backend && tsc --noEmit"
+    "start": "cross-env NODE_ENV=production && node ./backend/dist/index.js",
+    "dev": "cross-env NODE_ENV=development && nodemon ./backend/src/index.ts",
+    "check-types": "cd backend && tsc --noEmit",
+    "build-backend": "npm install && tsc --build ./backend/tsconfig.json",
+    "build-frontend": "cd frontend && npm install && npm run build",
+    "build": "npm run build-backend && npm run build-frontend"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +31,7 @@
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/multer": "^1.4.13",
+    "cross-env": "^7.0.3",
     "nodemon": "^3.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
