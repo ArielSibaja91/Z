@@ -29,13 +29,13 @@ app.use("/api/posts", postRoutes);
 app.use("/api/notifications", notificationRoutes);
 
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+    app.use(express.static(path.join(__dirname, '..', '..', 'Frontend', 'dist')));
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+        res.sendFile(path.join(__dirname, '..', '..', 'Frontend', 'dist', 'index.html'));
     });
 };
 
 app.listen(PORT, () => {
-    console.log(`Server is running in port: ${PORT}`)
+    console.log(`Server is running in port: http://localhost:${PORT}`)
     connectMongo();
 });
