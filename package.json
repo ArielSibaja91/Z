@@ -7,7 +7,7 @@
     "start": "cross-env NODE_ENV=production && node ./Backend/dist/index.js",
     "dev": "cross-env NODE_ENV=development && nodemon ./Backend/src/index.ts",
     "check-types": "cd Backend && tsc --noEmit",
-    "build-backend": "npm install && tsc --build ./Backend/tsconfig.json",
+    "build-backend": "tsc --build ./Backend/tsconfig.json",
     "build-frontend": "cd Frontend && npm install && npm audit fix && npm run build",
     "build": "npm run build-backend && npm run build-frontend"
   },
