@@ -2,12 +2,12 @@
   "name": "z",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "Backend/dist/index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production && node ./Backend/dist/index.js",
     "dev": "cross-env NODE_ENV=development && nodemon ./Backend/src/index.ts",
     "check-types": "cd Backend && tsc --noEmit",
-    "build-backend": "cd Backend && npm install && tsc --build ./tsconfig.json",
+    "build-backend": "npm install && cd Backend && tsc",
     "build-frontend": "cd Frontend && npm install && npm audit fix && npm run build",
     "build": "npm run build-backend && npm run build-frontend"
   },
