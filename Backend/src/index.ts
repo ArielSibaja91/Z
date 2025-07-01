@@ -9,7 +9,7 @@ import connectMongo from './database/mongoConection';
 import cookieParser from 'cookie-parser';
 import { v2 as cloudinary } from 'cloudinary';
 
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '..', '.env')});
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -29,9 +29,9 @@ app.use("/api/posts", postRoutes);
 app.use("/api/notifications", notificationRoutes);
 
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '..', '..', 'frontend', 'dist')));
+    app.use(express.static(path.join(__dirname, '..', '..', 'Frontend', 'dist')));
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'dist', 'index.html'));
+        res.sendFile(path.join(__dirname, '..', '..', 'Frontend', 'dist', 'index.html'));
     });
 };
 

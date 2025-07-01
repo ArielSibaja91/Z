@@ -1,1 +1,0 @@
-{"root":["./env.d.ts","./backend/src/index.ts","./backend/src/controllers/auth.controller.ts","./backend/src/database/mongoconection.ts","./backend/src/routes/auth.routes.ts"],"version":"5.6.2"}
