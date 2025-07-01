@@ -1,8 +1,7 @@
 # Chirp Z
 Welcome to Chirp Z! The Twitter-like social media app.
 
-## Redux-Bloglist
-The final project of part 7 of the basic course is a list of blogs to be developed with React Query or Redux, for consistency it was decided to use Redux. The goal was to unite the backend developed previously in part 4 with a complete frontend (styles, routing and state management).
+My intention with this project was to create a clone of the Twitter app (now called X). For this I used a stack based on `Typescript` with `Express` and `React`. The app makes use of a powerful `Redux Toolkit` tool, `RTK Query`, which greatly simplified the handling of the app's asynchronous data with great performance.
 
 ## Technologies Used
 
