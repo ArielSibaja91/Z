@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuthCheckQuery } from "../../features/auth/authApi";
 import { CreatePost } from "./CreatePost";
+import { MobileHeader } from "./MobileHeader";
 import { Posts } from "../../components/common/Posts";
 import { usePost } from "../../hooks/usePost";
 
@@ -11,6 +12,7 @@ export const HomePage = () => {
 
   return (
     <main className="flex-[4_4_0] mr-auto border-r border-white/20 min-h-screen">
+      <MobileHeader />
       <header className="flex w-full border-b border-white/20">
         <button
           className={

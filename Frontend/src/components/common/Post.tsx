@@ -46,7 +46,7 @@ export const Post: React.FC<
   };
 
   return (
-    <div className="flex gap-2 items-start p-4 border-b border-white/20">
+    <li className="flex gap-2 items-start p-4 border-b border-white/20">
       <Link to={`/profile/${postOwner.username}`}>
         <img
           className="w-8 rounded-full overflow-hidden"
@@ -197,6 +197,6 @@ export const Post: React.FC<
           </div>
         </div>
       </div>
-    </div>
+    </li>
   );
 };

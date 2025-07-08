@@ -21,16 +21,18 @@ export const Posts: React.FC<PostsProps> = ({ posts, isLoading }) => {
         </div>
       )}
       {!isLoading && posts && posts.length > 0 && (
-        posts.map((post) => (
-          <Post
-            key={post._id}
-            post={post}
-            isLoading={isLoading}
-            deletePost={deletePostAction}
-            likePost={likePostAction}
-            commentPost={commentPostAction}
-          />
-        ))
+        <ul className="flex flex-col sm:[&>li:last-child]:pb-4 [&>li:last-child]:pb-16">
+          {posts.map((post) => (
+            <Post
+              key={post._id}
+              post={post}
+              isLoading={isLoading}
+              deletePost={deletePostAction}
+              likePost={likePostAction}
+              commentPost={commentPostAction}
+            />
+          ))}
+        </ul>
       )}
       {!isLoading && posts && posts.length === 0 && (
         <div className='text-center text-gray-500 p-4'>
