@@ -30,15 +30,15 @@ export const LoginPage = () => {
   };
 
   return (
-    <main className='max-w-screen-xl mx-auto flex h-screen'>
+    <main className='max-w-screen-xl mx-auto flex h-screen xl:p-0 p-9'>
       <div className='flex-1 hidden lg:flex items-center justify-center'>
         <ZSVG className='lg:w-2/3 fill-white' />
       </div>
-      <div className='flex-1 flex flex-col justify-center items-center'>
+      <div className='flex-1 flex flex-col xl:justify-center items-center'>
         <form className='w-full flex gap-4 flex-col' onSubmit={handleSubmit}>
-          <ZSVG className='w-24 lg:hidden fill-white' />
-          <h1 className='text-6xl font-bold text-white mb-4'>What's happening now</h1>
-          <h2 className='text-3xl font-bold text-white mb-1'>Join Today</h2>
+          <ZSVG className='w-8 lg:hidden fill-white mb-10' />
+          <h1 className='xl:text-6xl text-4xl font-bold text-white mb-4'>What's happening now</h1>
+          <h2 className='xl:text-3xl text-2xl font-bold text-white mb-1'>Join Today</h2>
           <label className='border border-white/25 p-2 rounded flex items-center gap-2'>
             <MdOutlineMail />
             <input

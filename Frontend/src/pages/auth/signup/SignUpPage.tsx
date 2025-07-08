@@ -37,16 +37,16 @@ export const SignUpPage = () => {
   };
 
   return (
-    <main className='max-w-screen-xl mx-auto flex h-screen px-10'>
-      <div className='flex-1 hidden lg:flex items-center  justify-center'>
+    <main className='max-w-screen-xl mx-auto flex h-screen xl:px-10 xl:py-0 p-9'>
+      <div className='flex-1 hidden lg:flex items-center justify-center'>
         <ZSVG className=' lg:w-2/3 fill-white' />
       </div>
-      <div className='flex-1 flex flex-col justify-center items-center'>
+      <div className='flex-1 flex flex-col xl:justify-center items-center'>
         <form
           className='lg:w-2/3 mx-auto md:mx-20 flex gap-4 flex-col'
           onSubmit={handleSubmit}
         >
-          <ZSVG className='w-24 lg:hidden fill-white' />
+          <ZSVG className='w-9 lg:hidden fill-white mb-10' />
           <h1 className='text-[2.70rem] leading-none font-extrabold text-white/90'>
             Welcome to Z!
           </h1>
@@ -113,8 +113,8 @@ export const SignUpPage = () => {
             {isLoading ? <LoadingSpinner className='w-5 h-5' /> : "Signup"}
           </button>
         </form>
-        <div className='flex flex-col lg:w-2/3 gap-2 mt-4'>
-          <p className='text-white text-lg'>Already have an account?</p>
+        <div className='flex flex-col xl:lg:w-2/3 w-full gap-2 mt-4'>
+          <p className='text-white text-lg xl:text-left text-center'>Already have an account?</p>
           <Link to='/login'>
             <button
               className='rounded-full py-1.5 font-semibold bg-transparent text-primary w-full outline outline-1 outline-white/40'
