@@ -77,7 +77,7 @@ export const RightPanel = () => {
                 <div className="flex gap-2 items-center">
                   <div className="w-full">
                     <img
-                      className="w-8 rounded-full"
+                      className="w-8 h-8 rounded-full aspect-square"
                       src={user.profileImg || "/avatar-placeholder.png"}
                     />
                   </div>
