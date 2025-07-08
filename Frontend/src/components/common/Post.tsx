@@ -49,7 +49,7 @@ export const Post: React.FC<
     <li className="flex gap-2 items-start p-4 border-b border-white/20">
       <Link to={`/profile/${postOwner.username}`}>
         <img
-          className="w-8 rounded-full overflow-hidden"
+          className="w-9 h-9 aspect-square rounded-full overflow-hidden"
           src={postOwner.profileImg || "/avatar-placeholder.png"}
           alt="Profile"
         />
@@ -83,7 +83,7 @@ export const Post: React.FC<
           {post?.img && (
             <img
               src={post.img}
-              className="h-80 object-contain rounded-lg border border-white/20"
+              className="w-full h-auto max-h-60 sm:max-h-72 object-cover rounded-lg border border-white/20"
               alt="Post image"
             />
           )}

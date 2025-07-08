@@ -157,9 +157,15 @@ export const ProfilePage = () => {
               </Link>
               <div className='flex flex-col'>
                 <p className='font-bold text-lg'>{user?.fullName}</p>
-                <span className='text-sm text-slate-500'>
-                  {userPostsCount} posts
-                </span>
+                {userPostsCount === 1 ? (
+                  <span className='text-sm text-slate-500'>
+                    {userPostsCount} post
+                  </span>
+                ) : (
+                  <span className='text-sm text-slate-500'>
+                    {userPostsCount} posts
+                  </span>
+                )}
               </div>
             </div>
             <div className='relative group/cover'>
@@ -204,7 +210,7 @@ export const ProfilePage = () => {
               <div className='absolute -bottom-16 left-4'>
                 <div className='w-32 relative'>
                   <img
-                    className='w-full h-full object-cover rounded-full'
+                    className='w-full h-full object-cover rounded-full aspect-square'
                     src={
                       profileImg ||
                       user?.profileImg ||
