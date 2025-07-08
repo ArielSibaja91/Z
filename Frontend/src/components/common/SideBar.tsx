@@ -31,7 +31,7 @@ export const SideBar = () => {
   };
 
   return (
-    <nav className='md:flex-[2_2_0] w-18 max-w-52'>
+    <nav className='md:flex-[2_2_0] sm:flex w-18 max-w-52 hidden'>
       <div className='sticky top-0 left-0 h-screen flex flex-col border-r border-white/20 w-20 md:w-full'>
         <Link to='/' className='flex justify-center md:justify-start'>
           <ZSVG className='px-2 w-12 h-12 rounded-full fill-white hover:bg-stone-900' />

@@ -4,6 +4,7 @@ import { LoginPage } from "./pages/auth/login/LoginPage";
 import { HomePage } from "./pages/home/HomePage";
 import { NotificationPage } from "./pages/notification/NotificationPage";
 import { SideBar } from "./components/common/SideBar";
+import { MobileBar } from "./components/common/MobileBar";
 import { RightPanel } from "./components/common/RightPanel";
 import { ProfilePage } from "./pages/profile/ProfilePage";
 import { Toaster } from "react-hot-toast";
@@ -60,8 +61,9 @@ export const App = () => {
   }
 
   return (
-    <div className="flex max-w-6xl mx-auto">
+    <div className="flex sm:flex-row flex-col max-w-6xl mx-auto">
       {isSuccess && user && <SideBar />}
+      {isSuccess && user && <MobileBar />}
       <Routes>
         <Route
           path="/"

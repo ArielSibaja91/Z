@@ -168,18 +168,25 @@ export const ProfilePage = () => {
                 className='h-52 w-full object-cover'
                 alt='cover image'
               />
-                        {isMyProfile && (
-                            <div className="absolute top-2 right-2 flex gap-2 rounded-full p-2 bg-gray-800/85 cursor-pointer opacity-0 group-hover/cover:opacity-100 transition duration-200">
-                                <button onClick={() => coverImgRef.current?.click()}>
-                                    <MdEdit className="w-5 h-5 text-white" />
-                                </button>
-                                {user?.coverImg && (
-                                    <button onClick={handleDeleteCoverImage} disabled={isDeletingCoverImage}>
-                                        {isDeletingCoverImage ? <LoadingSpinner className="w-5 h-5 fill-white" /> : <MdDelete className="w-5 h-5 text-white" />}
-                                    </button>
-                                )}
-                            </div>
-                        )}
+              {isMyProfile && (
+                <div className='absolute top-2 right-2 flex gap-2 rounded-full p-2 bg-gray-800/85 cursor-pointer opacity-0 group-hover/cover:opacity-100 transition duration-200'>
+                  <button onClick={() => coverImgRef.current?.click()}>
+                    <MdEdit className='w-5 h-5 text-white' />
+                  </button>
+                  {user?.coverImg && (
+                    <button
+                      onClick={handleDeleteCoverImage}
+                      disabled={isDeletingCoverImage}
+                    >
+                      {isDeletingCoverImage ? (
+                        <LoadingSpinner className='w-5 h-5 fill-white' />
+                      ) : (
+                        <MdDelete className='w-5 h-5 text-white' />
+                      )}
+                    </button>
+                  )}
+                </div>
+              )}
               <input
                 type='file'
                 hidden
@@ -195,7 +202,7 @@ export const ProfilePage = () => {
                 onChange={(e) => handleImgChange(e, "profileImg")}
               />
               <div className='absolute -bottom-16 left-4'>
-                <div className='w-32 relative group/avatar'>
+                <div className='w-32 relative'>
                   <img
                     className='w-full h-full object-cover rounded-full'
                     src={
@@ -210,7 +217,10 @@ export const ProfilePage = () => {
                         <MdEdit className='w-4 h-4 text-white' />
                       </button>
                       {user?.profileImg && (
-                        <button onClick={handleDeleteProfileImage} disabled={isDeletingProfileImage}>
+                        <button
+                          onClick={handleDeleteProfileImage}
+                          disabled={isDeletingProfileImage}
+                        >
                           {isDeletingProfileImage ? (
                             <LoadingSpinner className='w-4 h-4 fill-white' />
                           ) : (
