@@ -11,7 +11,7 @@ export const HomePage = () => {
   const { posts, isLoading, addPostAction } = usePost(feedType, user);
 
   return (
-    <main className="flex-[4_4_0] mr-auto border-r border-white/20 min-h-screen">
+    <main className="flex-[4_4_0] xl:mr-auto border-r border-white/20 min-h-screen">
       <MobileHeader />
       <header className="flex w-full border-b border-white/20">
         <button

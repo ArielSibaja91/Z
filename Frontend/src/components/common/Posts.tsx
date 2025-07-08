@@ -21,7 +21,7 @@ export const Posts: React.FC<PostsProps> = ({ posts, isLoading }) => {
         </div>
       )}
       {!isLoading && posts && posts.length > 0 && (
-        <ul className="flex flex-col sm:[&>li:last-child]:pb-4 [&>li:last-child]:pb-16">
+        <ul className='flex flex-col sm:pb-0 pb-16'>
           {posts.map((post) => (
             <Post
               key={post._id}
