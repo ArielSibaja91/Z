@@ -30,7 +30,7 @@ export const LoginPage = () => {
   };
 
   return (
-    <main className='max-w-screen-xl mx-auto flex h-screen xl:p-0 p-9'>
+    <main className='max-w-screen-xl mx-auto flex h-screen xl:p-0 px-9 pt-9'>
       <div className='flex-1 hidden lg:flex items-center justify-center'>
         <ZSVG className='lg:w-2/3 fill-white' />
       </div>

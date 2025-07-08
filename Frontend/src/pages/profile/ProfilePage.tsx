@@ -143,7 +143,7 @@ export const ProfilePage = () => {
     }
   };
   return (
-    <main className='flex-[4_4_0] border-r border-white/20 min-h-screen'>
+    <main className='flex-[4_4_0] xl:border-r border-white/20 min-h-screen'>
       {isUserLoading && <ProfileHeaderSkeleton />}
       {!isUserLoading && !user && (
         <p className='text-center text-lg mt-4'>User not found</p>
