@@ -8,7 +8,10 @@
     "dev": "cd Backend && npm run dev",
     "build-backend": "cd Backend && npm install && npm run build",
     "build-frontend": "cd Frontend && npm install && npm run build",
-    "build": "npm run build-backend && npm run build-frontend"
+    "build": "npm run build-backend && npm run build-frontend",
+    "build-back-dev": "cd Backend && npm run build",
+    "build-front-dev": "cd Frontend && npm run build",
+    "build-dev-all": "npm run build-back-dev && npm run build-front-dev"
   },
   "keywords": [],
   "author": "",

@@ -21,8 +21,8 @@ export const MobileBar = () => {
     if (!confirm) return;
     await toast.promise(logout().unwrap(), {
       loading: "Loggin Out...",
-      success: <b>Logged out successfully!</b>,
-      error: <b>Failed to logout!</b>,
+      success: "Logged out successfully!",
+      error: "Failed to logout!",
     });
     dispatch(authApi.util.resetApiState());
   };

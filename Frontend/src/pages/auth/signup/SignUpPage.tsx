@@ -26,8 +26,8 @@ export const SignUpPage = () => {
     e.preventDefault();
     await toast.promise(signup(formData).unwrap(), {
       loading: 'Sigin Up...',
-      success: <b>Signup successful! Welcome to Z!</b>,
-      error: <b>Signup failed. Please check your credentials.</b>
+      success: 'Signup successful! Welcome to Z!',
+      error: 'Signup failed. Please check your credentials'
     });
     navigate("/");
   };
@@ -37,11 +37,11 @@ export const SignUpPage = () => {
   };
 
   return (
-    <main className='max-w-screen-xl mx-auto flex h-screen xl:px-10 xl:py-0 px-9 pt-9'>
+    <main className='max-w-screen-xl mx-auto flex h-screen xl:px-10 xl:py-0 px-9'>
       <div className='flex-1 hidden lg:flex items-center justify-center'>
         <ZSVG className='lg:w-2/3 fill-white' />
       </div>
-      <div className='flex-1 flex flex-col xl:justify-center items-center'>
+      <div className='flex-1 flex flex-col xl:justify-center items-center xl:mt-0 mt-9'>
         <form
           className='lg:w-2/3 mx-auto md:mx-20 flex gap-4 flex-col'
           onSubmit={handleSubmit}

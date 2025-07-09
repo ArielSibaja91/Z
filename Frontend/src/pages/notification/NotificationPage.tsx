@@ -55,12 +55,8 @@ export const NotificationPage = () => {
   const handleDeleteNotification = async (
     notificationId: string
   ): Promise<void> => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this notification?"
-    );
-    if (!confirmDelete) return;
     await toast.promise(deleteNotificationMutation(notificationId).unwrap(), {
-      loading: "Deleting notification...",
+      loading: "",
       success: <b>Notification deleted successfully!</b>,
       error: <b>Failed to delete notification</b>,
     });
@@ -90,11 +86,11 @@ export const NotificationPage = () => {
             <IoSettingsOutline className='w-4' />
           </button>
           {isOpen && (
-            <ul className='absolute z-10 px-2 py-1 bg-black rounded-md w-52 ml-[-50px]'>
+            <ul className='absolute z-10 px-2 py-1 bg-black border border-white/20 rounded-md w-52 md:right-0 right-2 md:ml-[-50px] hover:bg-zinc-900 duration-150'>
               <li>
                 <button
                   onClick={handleDeleteNotifications}
-                  className='w-full text-left px-4 py-2 hover:bg-zinc-900 duration-150'
+                  className='w-full text-left px-4 py-2'
                   disabled={isDeleting}
                 >
                   {isDeleting ? "Deleting..." : "Delete all notifications"}
@@ -157,7 +153,7 @@ export const NotificationPage = () => {
               <span className='flex justify-end flex-1'>
                 {!isLoading && (
                   <FaTrash
-                    className='cursor-pointer hover:text-red-500'
+                    className='cursor-pointer hover:text-red-500 duration-150'
                     onClick={() => handleDeleteNotification(notification._id)}
                   />
                 )}

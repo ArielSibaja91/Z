@@ -19,8 +19,8 @@ export const LoginPage = () => {
     e.preventDefault();
     await toast.promise(login(formData).unwrap(), {
       loading: 'Loggin...',
-      success: <b>Logged in successfully!</b>,
-      error: <b>Login failed. Please check your credentials.</b>
+      success: 'Logged in successfully!',
+      error: 'Login failed. Please check your credentials'
     });
     navigate("/");
   };
@@ -30,11 +30,11 @@ export const LoginPage = () => {
   };
 
   return (
-    <main className='max-w-screen-xl mx-auto flex h-screen xl:p-0 px-9 pt-9'>
+    <main className='max-w-screen-xl mx-auto flex h-screen xl:p-0 px-9'>
       <div className='flex-1 hidden lg:flex items-center justify-center'>
         <ZSVG className='lg:w-2/3 fill-white' />
       </div>
-      <div className='flex-1 flex flex-col xl:justify-center items-center'>
+      <div className='flex-1 flex flex-col xl:justify-center items-center md:mt-0 mt-9'>
         <form className='w-full flex gap-4 flex-col' onSubmit={handleSubmit}>
           <ZSVG className='w-8 lg:hidden fill-white mb-10' />
           <h1 className='xl:text-6xl text-4xl font-bold text-white mb-4'>What's happening now</h1>
@@ -49,6 +49,7 @@ export const LoginPage = () => {
               onChange={handleInputChange}
               value={formData.username}
               disabled={isLoading}
+              required
             />
           </label>
           <label className='border border-white/25 p-2 rounded flex items-center gap-2'>
@@ -61,6 +62,7 @@ export const LoginPage = () => {
               onChange={handleInputChange}
               value={formData.password}
               disabled={isLoading}
+              required
             />
           </label>
           <button
