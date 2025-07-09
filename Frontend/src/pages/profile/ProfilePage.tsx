@@ -207,7 +207,7 @@ export const ProfilePage = () => {
                 ref={profileImgRef}
                 onChange={(e) => handleImgChange(e, "profileImg")}
               />
-              <div className='absolute -bottom-16 left-4'>
+              <div className='group/avatar absolute -bottom-16 left-4'>
                 <div className='w-32 relative'>
                   <img
                     className='w-full h-full object-cover rounded-full aspect-square'

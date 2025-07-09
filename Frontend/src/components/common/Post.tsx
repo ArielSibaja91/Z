@@ -70,7 +70,7 @@ export const Post: React.FC<
             <span className="flex justify-end flex-1">
               {!isLoading && (
                 <FaTrash
-                  className="cursor-pointer hover:text-red-500"
+                  className="cursor-pointer hover:text-red-500 duration-150"
                   onClick={handleDeletePost}
                 />
               )}
@@ -94,8 +94,8 @@ export const Post: React.FC<
               className="flex gap-1 items-center cursor-pointer group"
               onClick={openModal}
             >
-              <FaRegComment className="w-4 h-4 text-slate-500 group-hover:text-sky-400" />
-              <span className="text-sm text-slate-500 group-hover:text-sky-400">
+              <FaRegComment className="w-4 h-4 text-slate-500 group-hover:text-sky-400 duration-150" />
+              <span className="text-sm text-slate-500 group-hover:text-sky-400 duration-150">
                 {post.comments?.length || 0}
               </span>
             </div>
@@ -168,8 +168,8 @@ export const Post: React.FC<
               </button>
             </dialog>
             <div className="flex gap-1 items-center group cursor-pointer">
-              <BiRepost className="w-6 h-6 text-slate-500 group-hover:text-green-500" />
-              <span className="text-sm text-slate-500 group-hover:text-green-500">
+              <BiRepost className="w-6 h-6 text-slate-500 group-hover:text-green-500 duration-150" />
+              <span className="text-sm text-slate-500 group-hover:text-green-500 duration-150">
                 0
               </span>
             </div>
@@ -178,13 +178,13 @@ export const Post: React.FC<
               onClick={handleLikePost}
             >
               {!isLiked && (
-                <FaRegHeart className="w-4 h-4 cursor-pointer text-slate-500 group-hover:text-pink-500" />
+                <FaRegHeart className="w-4 h-4 cursor-pointer text-slate-500 group-hover:text-pink-500 duration-150" />
               )}
               {isLiked && (
-                <FaRegHeart className="w-4 h-4 cursor-pointer fill-pink-500" />
+                <FaRegHeart className="w-4 h-4 cursor-pointer fill-pink-500 duration-150" />
               )}
               <span
-                className={`text-sm group-hover:text-pink-500 ${
+                className={`text-sm group-hover:text-pink-500 duration-150 ${
                   isLiked ? "text-pink-500" : "text-slate-500"
                 }`}
               >
@@ -193,7 +193,7 @@ export const Post: React.FC<
             </div>
           </div>
           <div className="flex w-1/3 justify-end gap-2 items-center">
-            <FaRegBookmark className="w-4 h-4 text-slate-500 cursor-pointer hover:fill-sky-400 duration-200" />
+            <FaRegBookmark className="w-4 h-4 text-slate-500 cursor-pointer hover:fill-sky-400 duration-150" />
           </div>
         </div>
       </div>

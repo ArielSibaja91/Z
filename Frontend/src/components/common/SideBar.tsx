@@ -24,8 +24,8 @@ export const SideBar = () => {
     if (!confirm) return;
     await toast.promise(logout().unwrap(), {
       loading: "Loggin Out...",
-      success: <b>Logged out successfully!</b>,
-      error: <b>Failed to logout!</b>,
+      success: "Logged out successfully!",
+      error: "Failed to logout!",
     });
     dispatch(authApi.util.resetApiState());
   };
@@ -74,9 +74,9 @@ export const SideBar = () => {
           <div className='mt-auto mb-10 flex gap-2 items-center transition-all duration-300 hover:bg-[#181818] py-2 px-4 rounded-full'>
             <Link
               to={`/profile/${user.username}`}
-              className='flex flex-1 items-center gap-2'
+              className='hidden md:flex flex-1 items-center gap-2'
             >
-              <div className='avatar hidden md:inline-flex'>
+              <div className='hidden md:inline-flex'>
                 <div className='w-8'>
                   <img
                     className='rounded-full'
@@ -93,7 +93,7 @@ export const SideBar = () => {
               </div>
             </Link>
             <BiLogOut
-              className='w-5 h-5 cursor-pointer ml-auto'
+              className='md:w-5 md:h-5 w-6 h-6 cursor-pointer md:ml-auto mx-auto'
               onClick={handleLogout}
             />
           </div>
